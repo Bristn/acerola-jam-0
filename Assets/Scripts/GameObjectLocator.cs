@@ -14,4 +14,8 @@ public class GameObjectLocator : MonoBehaviour
 
     public Grid Grid;
     public Tilemap Tilemap;
+
+    /* --- Player --- */
+
+    public Camera MainCamera;
 }

@@ -1,3 +1,4 @@
+using Cameras.Targets;
 using Unity.Burst;
 using Unity.Entities;
 using Unity.Mathematics;
@@ -69,7 +70,7 @@ namespace Buildings.Towers
 
             return new CellData()
             {
-                Index = new int3(cellIndex.x, cellIndex.y, cellIndex.z),
+                Index = new int3(cellIndex.x, cellIndex.y, 0),
                 Center = new float3(center.x, center.y, 0)
             };
         }

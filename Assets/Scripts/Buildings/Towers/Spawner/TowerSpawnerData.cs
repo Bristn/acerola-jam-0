@@ -1,7 +1,5 @@
 
 using Unity.Entities;
-using UnityEngine;
-using UnityEngine.Tilemaps;
 
 namespace Buildings.Towers
 {
