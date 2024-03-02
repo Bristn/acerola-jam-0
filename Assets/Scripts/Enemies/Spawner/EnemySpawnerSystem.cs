@@ -37,13 +37,20 @@ namespace Enemies
 
             // Instantiate prefab
             Entity prefab = spawnerData.ValueRO.Prefab;
-            NativeArray<Entity> instances = entityManager.Instantiate(prefab, 10, Allocator.Temp);
+            NativeArray<Entity> instances = entityManager.Instantiate(prefab, 1, Allocator.Temp);
             foreach (Entity entity in instances)
             {
                 float2 enemyOffset = random.NextFloat2(-1, 1);
 
                 RefRW<LocalTransform> transform = SystemAPI.GetComponentRW<LocalTransform>(entity);
                 transform.ValueRW.Position = new float3(waveCenter.x + enemyOffset.x, waveCenter.y + enemyOffset.y, -5);
+
+                entityManager.AddComponent<PathfindingParametersData>(entity);
+                entityManager.SetComponentData(entity, new PathfindingParametersData()
+                {
+                    Start = new(0, 0),
+                    End = new(5, 1),
+                });
             }
 
             // Add Components to new instance
