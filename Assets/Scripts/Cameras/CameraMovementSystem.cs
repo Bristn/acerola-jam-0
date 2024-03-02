@@ -29,7 +29,7 @@ namespace Cameras
             this.previousPosition = currentPosition;
 
             // Zooming is realised with the orthographic scale of the camera
-            this.zoom += Input.mouseScrollDelta.y * 0.1f;
+            this.zoom += Input.mouseScrollDelta.y * -0.1f;
             this.zoom = Mathf.Clamp(this.zoom, 2.5f, 7.5f);
             GameObjectLocator.Instance.MainCamera.orthographicSize = this.zoom;
         }
