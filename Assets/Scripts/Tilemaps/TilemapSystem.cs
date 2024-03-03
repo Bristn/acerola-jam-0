@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Pathfinding.Algorithm;
+using Players;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
@@ -14,10 +15,13 @@ namespace Tilemaps
     [UpdateInGroup(typeof(InitializationSystemGroup))]
     public partial struct TilemapSystem : ISystem
     {
+        private bool updatePlayer;
+
         [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
             Debug.Log("TilemapSystem: OnCreate");
+            this.updatePlayer = true;
             state.RequireForUpdate<TilemapData>();
         }
 
@@ -42,7 +46,6 @@ namespace Tilemaps
                 {
                     TileType tileType = TileBaseLookup.Instance.GetTileType(x, y);
 
-
                     PathNode node = new()
                     {
                         X = x,
@@ -66,6 +69,19 @@ namespace Tilemaps
 
             tilemapData.ValueRW.GridSize = new(bounds.size.x, bounds.size.y);
             tilemapData.ValueRW.IsUpdated = true;
+
+            // Update center of grid
+            tilemapData.ValueRW.CenterOfGrid = buffer[buffer.Length / 2].WorldPosition;
+
+            // Update player
+            if (this.updatePlayer)
+            {
+                this.updatePlayer = false;
+                foreach (var (transform, movement) in SystemAPI.Query<RefRW<LocalTransform>, RefRO<PlayerMovementData>>())
+                {
+                    transform.ValueRW.Position = new(tilemapData.ValueRW.CenterOfGrid.x, tilemapData.ValueRW.CenterOfGrid.y, -5);
+                }
+            }
         }
     }
 }

@@ -10,5 +10,6 @@ namespace Tilemaps
     {
         public bool IsUpdated;
         public int2 GridSize;
+        public float2 CenterOfGrid;
     }
 }

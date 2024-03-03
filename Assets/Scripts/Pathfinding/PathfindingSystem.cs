@@ -63,7 +63,7 @@ namespace Pathfinding
             public EntityCommandBuffer.ParallelWriter CommandBuffer;
             public int2 GridSize;
 
-            public void Execute(Entity entity, [EntityIndexInQuery] int sortKey, ref PathfindingParametersData parameters, ref DynamicBuffer<PathPosition> buffer, ref PathFollowerData followData)
+            public void Execute(Entity entity, [EntityIndexInQuery] int sortKey, ref PathfindingRequestPathData parameters, ref DynamicBuffer<PathPosition> buffer, ref PathFollowerData followData)
             {
                 NativeArray<PathNode> nodes = new(this.AllNodes.Length, Allocator.Temp);
                 nodes.CopyFrom(this.AllNodes);
@@ -169,7 +169,7 @@ namespace Pathfinding
                 closed.Dispose();
                 nodes.Dispose();
 
-                CommandBuffer.RemoveComponent<PathfindingParametersData>(sortKey, entity);
+                CommandBuffer.RemoveComponent<PathfindingRequestPathData>(sortKey, entity);
             }
 
             private void BuildPathFromNodes(NativeArray<PathNode> nodes, PathNode endNode, DynamicBuffer<PathPosition> buffer)
