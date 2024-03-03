@@ -1,9 +1,7 @@
-using NaughtyAttributes;
 using Unity.Entities;
 using UnityEngine;
-using UnityEngine.Tilemaps;
 
-namespace Buildings.Towers
+namespace Pathfinding.Positions
 {
     public class PathPositionAuthoring : MonoBehaviour
     {

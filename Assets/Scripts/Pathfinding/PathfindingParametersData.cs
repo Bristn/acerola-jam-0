@@ -2,12 +2,12 @@
 using Unity.Entities;
 using Unity.Mathematics;
 
-namespace Enemies
+namespace Pathfinding
 {
     [System.Serializable]
     public struct PathfindingParametersData : IComponentData
     {
-        public int2 Start;
-        public int2 End;
+        public int2 StartCell;
+        public int2 EndCell;
     }
 }

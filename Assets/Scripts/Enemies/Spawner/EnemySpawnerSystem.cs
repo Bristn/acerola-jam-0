@@ -1,4 +1,5 @@
 using System;
+using Pathfinding;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
@@ -48,8 +49,8 @@ namespace Enemies
                 entityManager.AddComponent<PathfindingParametersData>(entity);
                 entityManager.SetComponentData(entity, new PathfindingParametersData()
                 {
-                    Start = new(0, 0),
-                    End = new(5, 1),
+                    StartCell = new(0, 0),
+                    EndCell = new(5, 1),
                 });
             }
         }
