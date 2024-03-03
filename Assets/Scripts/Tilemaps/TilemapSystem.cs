@@ -42,6 +42,7 @@ namespace Tilemaps
                 {
                     TileType tileType = TileBaseLookup.Instance.GetTileType(x, y);
 
+
                     PathNode node = new()
                     {
                         X = x,
@@ -53,7 +54,13 @@ namespace Tilemaps
                     };
 
                     node.UpdateFCost();
-                    buffer.Add(new() { Node = node });
+
+                    Vector3 worldPosition = tilemap.CellToWorld(new(x, y, 0));
+                    buffer.Add(new()
+                    {
+                        Node = node,
+                        WorldPosition = new(worldPosition.x, worldPosition.y),
+                    });
                 }
             }
 

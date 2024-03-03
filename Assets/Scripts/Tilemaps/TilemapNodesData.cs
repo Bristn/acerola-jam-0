@@ -9,5 +9,6 @@ namespace Tilemaps
     public partial struct TilemapNodesData : IBufferElementData
     {
         public PathNode Node;
+        public float2 WorldPosition;
     }
 }

@@ -21,6 +21,7 @@ namespace Enemies
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
+
             // Check if a new wave should be spawned
             RefRW<EnemySpawnerData> spawnerData = SystemAPI.GetSingletonRW<EnemySpawnerData>();
             if (!spawnerData.ValueRW.ReduceWaveCooldown(Time.deltaTime))
@@ -50,7 +51,7 @@ namespace Enemies
                 entityManager.SetComponentData(entity, new PathfindingParametersData()
                 {
                     StartCell = new(0, 0),
-                    EndCell = new(5, 1),
+                    EndCell = new(3, 0),
                 });
             }
 

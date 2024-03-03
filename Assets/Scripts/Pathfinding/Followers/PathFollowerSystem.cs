@@ -1,5 +1,9 @@
+using System.ComponentModel;
+using Pathfinding.Algorithm;
 using Pathfinding.Positions;
+using Tilemaps;
 using Unity.Burst;
+using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
@@ -15,17 +19,34 @@ namespace Pathfinding.Followers
         {
             Debug.Log("PathFollowerSystem: OnCreate");
             state.RequireForUpdate<PathFollowerData>();
+            state.RequireForUpdate<TilemapNodesData>();
         }
 
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
-            new MoveFollowerJob() { Speed = 3f, DeltaTime = Time.deltaTime }.ScheduleParallel();
+            // Check if tilemap is initialized
+            TilemapData tilemapData = SystemAPI.GetSingleton<TilemapData>();
+            if (!tilemapData.IsUpdated)
+            {
+                return;
+            }
+
+            DynamicBuffer<TilemapNodesData> tileBuffer = SystemAPI.GetSingletonBuffer<TilemapNodesData>();
+            new MoveFollowerJob()
+            {
+                Speed = 1f,
+                DeltaTime = Time.deltaTime,
+                TileBuffer = tileBuffer,
+                GridSize = tilemapData.GridSize
+            }.ScheduleParallel();
         }
 
         [BurstCompile]
         private partial struct MoveFollowerJob : IJobEntity
         {
+            [NativeDisableParallelForRestriction] public DynamicBuffer<TilemapNodesData> TileBuffer; // Disable savety as access is readonly
+            public int2 GridSize;
             public float DeltaTime;
             public float Speed;
 
@@ -37,7 +58,9 @@ namespace Pathfinding.Followers
                 }
 
                 int2 targetCell = buffer[followerData.CurrentCellIndex].GridPosition;
-                float3 targetPosition = new(targetCell.x, targetCell.y, -5);
+                int targetIndex = PathHelpers.GetCellIndex(targetCell.x, targetCell.y, this.GridSize.x);
+                float2 targetWorldPosition = this.TileBuffer[targetIndex].WorldPosition;
+                float3 targetPosition = new(targetWorldPosition.x, targetWorldPosition.y, -5);
                 float3 direction = math.normalizesafe(targetPosition - transform.Position);
 
                 transform.Position += direction * this.Speed * this.DeltaTime;

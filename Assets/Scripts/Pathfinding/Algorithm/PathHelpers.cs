@@ -8,15 +8,22 @@ namespace Pathfinding.Algorithm
 {
     public class PathHelpers
     {
-        public static NativeArray<int2> NeighborOffsets { get; private set; } = new(new int2[] {
-            new(-1, 0), // Left
-            new(1, 0),  // Right
-            new(-1, 1), // Top Left
-            new(0, 1),  // Top
-            new(1, 1),  // Top Right
-            new(-1, 1), // Bottom Right
-            new(0, 1),  // Bottom
-            new(-1, -1),// Bottom Left
+        public static NativeArray<int2> EvenNeighborOffsets { get; private set; } = new(new int2[] {
+            new(0, 1),    // Top-Right
+            new(1, 0),    // Right
+            new(0, -1),   // Bottom Right
+            new(-1, -1),  // Bottom Left
+            new(-1, 0),   // Left
+            new(-1, 1),    // Top Left
+        }, Allocator.Persistent);
+
+        public static NativeArray<int2> OddNeighborOffsets { get; private set; } = new(new int2[] {
+            new(1, 1),    // Top-Right
+            new(1, 0),    // Right
+            new(1, -1),   // Bottom Right
+            new(0, -1),   // Bottom Left
+            new(-1, 0),   // Left
+            new(0, 1),    // Top Left
         }, Allocator.Persistent);
 
         public static int GetCellIndex(int x, int y, int width)

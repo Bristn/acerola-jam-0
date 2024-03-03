@@ -13,11 +13,13 @@ namespace Pathfinding
 {
     public partial struct PathfindingSystem : ISystem
     {
-        private NativeArray<int2> cellNeighborOffsets;
+        private NativeArray<int2> evenNeighborOffsets;
+        private NativeArray<int2> oddNeighborOffsets;
 
         public void OnCreate(ref SystemState state)
         {
-            this.cellNeighborOffsets = PathHelpers.NeighborOffsets;
+            this.evenNeighborOffsets = PathHelpers.EvenNeighborOffsets;
+            this.oddNeighborOffsets = PathHelpers.OddNeighborOffsets;
             state.RequireForUpdate<TilemapData>();
 
         }
@@ -45,7 +47,8 @@ namespace Pathfinding
             new FindPathJob()
             {
                 CommandBuffer = commandBuffer.AsParallelWriter(),
-                CellNeighborOffsets = this.cellNeighborOffsets,
+                EvenNeighborOffsets = this.evenNeighborOffsets,
+                OddNeighborOffsets = this.oddNeighborOffsets,
                 GridSize = tilemapData.GridSize,
                 AllNodes = baseNodes,
             }.ScheduleParallel();
@@ -54,7 +57,8 @@ namespace Pathfinding
         [BurstCompile]
         private partial struct FindPathJob : IJobEntity
         {
-            [NativeDisableParallelForRestriction] public NativeArray<int2> CellNeighborOffsets; // Disable savety as access is readonly
+            [NativeDisableParallelForRestriction] public NativeArray<int2> EvenNeighborOffsets; // Disable savety as access is readonly
+            [NativeDisableParallelForRestriction] public NativeArray<int2> OddNeighborOffsets; // Disable savety as access is readonly
             public NativeArray<PathNode> AllNodes;
             public EntityCommandBuffer.ParallelWriter CommandBuffer;
             public int2 GridSize;
@@ -109,12 +113,10 @@ namespace Pathfinding
                     }
 
                     // Add to closed list
-                    closed.Add(currentIndex);
-
-                    Debug.Log(CellNeighborOffsets.Length);
-                    for (int i = 0; i < CellNeighborOffsets.Length; i++)
+                    int neighborCount = this.OddNeighborOffsets.Length;
+                    for (int i = 0; i < neighborCount; i++)
                     {
-                        int2 offset = CellNeighborOffsets[i];
+                        int2 offset = currentNode.Y % 2 == 0 ? this.EvenNeighborOffsets[i] : this.OddNeighborOffsets[i];
                         int2 neighbor = new(currentNode.X + offset.x, currentNode.Y + offset.y);
 
                         // Ignore cells outside of grid
