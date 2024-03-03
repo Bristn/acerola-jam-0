@@ -1,6 +1,7 @@
 using Pathfinding.Algorithm;
 using Pathfinding.Followers;
 using Pathfinding.Positions;
+using Tilemaps;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Collections.LowLevel.Unsafe;
@@ -13,15 +14,12 @@ namespace Pathfinding
     public partial struct PathfindingSystem : ISystem
     {
         private NativeArray<int2> cellNeighborOffsets;
-        private NativeArray<PathNode> allNodes;
-        private int2 gridSize;
 
         public void OnCreate(ref SystemState state)
         {
             this.cellNeighborOffsets = PathHelpers.NeighborOffsets;
+            state.RequireForUpdate<TilemapData>();
 
-            this.gridSize = new(10, 10);
-            this.allNodes = PathHelpers.GetNodesFromTilemap();
         }
 
         public void OnUpdate(ref SystemState state)
@@ -29,12 +27,27 @@ namespace Pathfinding
             var commandBufferSingleton = SystemAPI.GetSingleton<EndSimulationEntityCommandBufferSystem.Singleton>();
             EntityCommandBuffer commandBuffer = commandBufferSingleton.CreateCommandBuffer(state.WorldUnmanaged);
 
+            // Check if tilemap is initialized
+            TilemapData tilemapData = SystemAPI.GetSingleton<TilemapData>();
+            if (!tilemapData.IsUpdated)
+            {
+                return;
+            }
+
+            // Convert buffer to list
+            DynamicBuffer<TilemapNodesData> tileBuffer = SystemAPI.GetSingletonBuffer<TilemapNodesData>();
+            NativeArray<PathNode> baseNodes = new(tileBuffer.Length, Allocator.TempJob);
+            for (int i = 0; i < tileBuffer.Length; i++)
+            {
+                baseNodes[i] = tileBuffer[i].Node;
+            }
+
             new FindPathJob()
             {
                 CommandBuffer = commandBuffer.AsParallelWriter(),
                 CellNeighborOffsets = this.cellNeighborOffsets,
-                GridSize = this.gridSize,
-                // AllNodes = this.allNodes,
+                GridSize = tilemapData.GridSize,
+                AllNodes = baseNodes,
             }.ScheduleParallel();
         }
 
@@ -42,13 +55,14 @@ namespace Pathfinding
         private partial struct FindPathJob : IJobEntity
         {
             [NativeDisableParallelForRestriction] public NativeArray<int2> CellNeighborOffsets; // Disable savety as access is readonly
+            public NativeArray<PathNode> AllNodes;
             public EntityCommandBuffer.ParallelWriter CommandBuffer;
             public int2 GridSize;
 
             public void Execute(Entity entity, [EntityIndexInQuery] int sortKey, ref PathfindingParametersData parameters, ref DynamicBuffer<PathPosition> buffer, ref PathFollowerData followData)
             {
-                // TODO: Copy array which gets passed as parameter (Convert tilemap into basic pathnodes once and copy those for every iteration)
-                NativeArray<PathNode> nodes = PathHelpers.GetNodesFromTilemap();
+                NativeArray<PathNode> nodes = new(this.AllNodes.Length, Allocator.Temp);
+                nodes.CopyFrom(this.AllNodes);
 
                 int2 startPosition = parameters.StartCell;
                 int2 endPosition = parameters.EndCell;

@@ -1,5 +1,8 @@
 using Unity.Collections;
 using Unity.Mathematics;
+using UnityEngine;
+using UnityEngine.Tilemaps;
+using static TileBaseLookup;
 
 namespace Pathfinding.Algorithm
 {
@@ -57,33 +60,6 @@ namespace Pathfinding.Algorithm
             }
 
             return lowestCostNode.Index;
-        }
-
-        public static NativeArray<PathNode> GetNodesFromTilemap()
-        {
-            int2 gridSize = new(10, 10);
-
-            NativeArray<PathNode> nodes = new(gridSize.x * gridSize.y, Allocator.Temp);
-            for (int x = 0; x < gridSize.x; x++)
-            {
-                for (int y = 0; y < gridSize.y; y++)
-                {
-                    PathNode node = new()
-                    {
-                        X = x,
-                        Y = y,
-                        Index = GetCellIndex(x, y, gridSize.x),
-                        GCost = int.MaxValue,
-                        IsWalkable = true, // TODO: Set
-                        PreviousNodeIndex = -1
-                    };
-
-                    node.UpdateFCost();
-                    nodes[node.Index] = node;
-                }
-            }
-
-            return nodes;
         }
     }
 }

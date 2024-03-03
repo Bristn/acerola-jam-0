@@ -1,4 +1,5 @@
 
+
 namespace Pathfinding.Algorithm
 {
     public struct PathNode
@@ -16,6 +17,21 @@ namespace Pathfinding.Algorithm
         public void UpdateFCost()
         {
             this.FCost = this.GCost + this.HCost;
+        }
+
+        public PathNode Copy()
+        {
+            return new PathNode()
+            {
+                X = X,
+                Y = Y,
+                Index = Index,
+                IsWalkable = IsWalkable,
+                PreviousNodeIndex = PreviousNodeIndex,
+                GCost = GCost,
+                HCost = HCost,
+                FCost = FCost,
+            };
         }
     }
 }

@@ -38,7 +38,7 @@ namespace Enemies
 
             // Instantiate prefab
             Entity prefab = spawnerData.ValueRO.Prefab;
-            NativeArray<Entity> instances = entityManager.Instantiate(prefab, 5, Allocator.Temp);
+            NativeArray<Entity> instances = entityManager.Instantiate(prefab, 1, Allocator.Temp);
             foreach (Entity entity in instances)
             {
                 float2 enemyOffset = random.NextFloat2(-1, 1);
@@ -53,6 +53,8 @@ namespace Enemies
                     EndCell = new(5, 1),
                 });
             }
+
+            instances.Dispose();
         }
     }
 }
