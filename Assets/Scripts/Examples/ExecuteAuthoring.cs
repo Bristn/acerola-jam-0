@@ -20,7 +20,7 @@ public class ExecuteAuthoring : MonoBehaviour
             var entity = GetEntity(TransformUsageFlags.None);
 
             if (authoring.MainThread) AddComponent<MainThread>(entity);
-            if (authoring.IJobEntity) AddComponent<IJobEntity>(entity);
+            // if (authoring.IJobEntity) AddComponent<IJobEntity>(entity);
             if (authoring.Aspects) AddComponent<Aspects>(entity);
             if (authoring.Prefabs) AddComponent<Prefabs>(entity);
             if (authoring.IJobChunk) AddComponent<IJobChunk>(entity);
@@ -35,9 +35,11 @@ public struct MainThread : IComponentData
 {
 }
 
+/*
 public struct IJobEntity : IComponentData
 {
 }
+*/
 
 public struct Aspects : IComponentData
 {

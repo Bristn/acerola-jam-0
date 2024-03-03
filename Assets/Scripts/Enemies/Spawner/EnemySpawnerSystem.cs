@@ -37,7 +37,7 @@ namespace Enemies
 
             // Instantiate prefab
             Entity prefab = spawnerData.ValueRO.Prefab;
-            NativeArray<Entity> instances = entityManager.Instantiate(prefab, 1, Allocator.Temp);
+            NativeArray<Entity> instances = entityManager.Instantiate(prefab, 5, Allocator.Temp);
             foreach (Entity entity in instances)
             {
                 float2 enemyOffset = random.NextFloat2(-1, 1);
@@ -52,23 +52,6 @@ namespace Enemies
                     End = new(5, 1),
                 });
             }
-
-            // Add Components to new instance
-            /*
-            entityManager.AddComponent<BuildingData>(instance);
-            entityManager.SetComponentData(instance, new BuildingData()
-            {
-                Index = cellData.Index
-            });
-            */
-
-            // Position prefab
-            // RefRW<LocalTransform> transform = SystemAPI.GetComponentRW<LocalTransform>(instance);
-        }
-
-        private void SpawnWave(float3 centerOfWave)
-        {
-
         }
     }
 }

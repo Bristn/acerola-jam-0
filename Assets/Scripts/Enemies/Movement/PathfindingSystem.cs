@@ -1,6 +1,8 @@
+using System.Collections.Generic;
 using Enemies;
 using Unity.Burst;
 using Unity.Collections;
+using Unity.Collections.LowLevel.Unsafe;
 using Unity.Entities;
 using Unity.Jobs;
 using Unity.Mathematics;
@@ -8,43 +10,29 @@ using UnityEngine;
 
 public partial struct PathfindingSystem : ISystem
 {
-    public void OnUpdate(ref SystemState state)
+
+    public void OnCreate(ref SystemState state)
     {
-        foreach (var (parameters, pathPosition, followData, entity) in SystemAPI.Query<RefRO<PathfindingParametersData>, DynamicBuffer<PathPosition>, RefRW<PathFollowData>>().WithEntityAccess())
-        {
-            var ecbSingleton = SystemAPI.GetSingleton<BeginSimulationEntityCommandBufferSystem.Singleton>();
-            var ecb = ecbSingleton.CreateCommandBuffer(state.WorldUnmanaged);
-
-            FindPath job = new FindPath()
-            {
-                startPosition = parameters.ValueRO.Start,
-                endPosition = parameters.ValueRO.End,
-                pathPositionBuffer = pathPosition,
-            };
-
-            job.Run();
-
-            EntityManager entityManager = state.EntityManager;
-            entityManager.SetComponentData(entity, new PathFollowData()
-            {
-                Index = pathPosition.Length - 1,
-            });
-
-            ecb.RemoveComponent<PathfindingParametersData>(entity);
-        }
     }
 
-
-    // TODO: Burst does not work here????
-    [BurstCompile]
-    private struct FindPath : IJob
+    public void OnUpdate(ref SystemState state)
     {
-        public int2 startPosition;
-        public int2 endPosition;
-        public DynamicBuffer<PathPosition> pathPositionBuffer;
+        var ecbSingleton = SystemAPI.GetSingleton<EndSimulationEntityCommandBufferSystem.Singleton>();
+        var ecb = ecbSingleton.CreateCommandBuffer(state.WorldUnmanaged);
 
-        public void Execute()
+        new TestJob() { ecbParallel = ecb.AsParallelWriter() }.ScheduleParallel();
+    }
+
+    [BurstCompile]
+    private partial struct TestJob : IJobEntity
+    {
+        internal EntityCommandBuffer.ParallelWriter ecbParallel;
+
+        // Parameters = Query
+        public void Execute(Entity entity, [EntityIndexInQuery] int sortKey, ref PathfindingParametersData parameters, ref DynamicBuffer<PathPosition> buffer, ref PathFollowData followData)
         {
+            int2 startPosition = parameters.Start;
+            int2 endPosition = parameters.End;
             int2 gridSize = new(20, 20);
 
             // Setup nodes
@@ -160,13 +148,20 @@ public partial struct PathfindingSystem : ISystem
 
             // 
             PathNode endNode = nodes[endIndex];
-            pathPositionBuffer.Clear();
-            this.BuildPathFromNodes(nodes, endNode, pathPositionBuffer);
+            buffer.Clear();
+            this.BuildPathFromNodes(nodes, endNode, buffer);
+
+            followData.Index = buffer.Length - 1;
 
             nodes.Dispose();
             open.Dispose();
             closed.Dispose();
             cellNeighborOffset.Dispose();
+
+            // EntityCommandBuffer ecb = new EntityCommandBuffer(Allocator.TempJob);
+            // ecb.RemoveComponent<PathfindingParametersData>(entity);
+
+            ecbParallel.RemoveComponent<PathfindingParametersData>(sortKey, entity);
         }
 
         private NativeList<int2> BuildPathFromNodes(NativeArray<PathNode> nodes, PathNode endNode)
@@ -269,7 +264,4 @@ public partial struct PathfindingSystem : ISystem
             }
         }
     }
-
-
-
 }
