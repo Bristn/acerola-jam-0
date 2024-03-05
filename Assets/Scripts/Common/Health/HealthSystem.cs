@@ -54,7 +54,7 @@ namespace Common.Health
                     this.CommandBuffer.SetComponent(sortKey, pickup, new LocalTransform()
                     {
                         Position = enemyTransform.Position,
-                        Scale = 1,
+                        Scale = 0.25f,
                     });
                 }
 

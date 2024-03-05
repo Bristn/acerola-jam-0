@@ -76,13 +76,14 @@ namespace Buildings.Towers
                     {
                         Damage = 50,
                         Direction = baseDirection,
-                        Speed = 5f
+                        Speed = 10f
                     });
 
                     commandBuffer.SetComponent(projectile, new LocalTransform()
                     {
                         Position = new(towerPosition.x, towerPosition.y, -5),
-                        Scale = 1,
+                        Scale = 0.2f,
+                        Rotation = quaternion.LookRotationSafe(math.forward(), new(baseDirection.x, baseDirection.y, 0))
                     });
                 }
 
