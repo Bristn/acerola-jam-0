@@ -19,7 +19,7 @@ namespace Players
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
-            float2 direction = new float2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical")) * Time.deltaTime;
+            float2 direction = new float2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical")) * Time.deltaTime * 2;
 
             // Check if there already is a building at this index
             foreach (var (transform, target) in SystemAPI.Query<RefRW<LocalTransform>, RefRO<PlayerMovementData>>())

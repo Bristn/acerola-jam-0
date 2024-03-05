@@ -24,6 +24,9 @@ namespace Enemies
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
+            var ecbSingleton = SystemAPI.GetSingleton<EndSimulationEntityCommandBufferSystem.Singleton>();
+            EntityCommandBuffer commandBuffer = ecbSingleton.CreateCommandBuffer(state.WorldUnmanaged);
+
             // Check if a new wave should be spawned
             RefRW<EnemySpawnerData> spawnerData = SystemAPI.GetSingletonRW<EnemySpawnerData>();
             if (!spawnerData.ValueRW.ReduceWaveCooldown(Time.deltaTime))
@@ -45,7 +48,9 @@ namespace Enemies
 
             // Instantiate prefab
             Entity prefab = spawnerData.ValueRO.Prefab;
-            NativeArray<Entity> instances = entityManager.Instantiate(prefab, 1, Allocator.Temp);
+            NativeArray<Entity> instances = new(1, Allocator.Temp);
+            commandBuffer.Instantiate(prefab, instances);
+
             foreach (Entity entity in instances)
             {
                 float2 enemyOffset = random.NextFloat2(-1, 1);
@@ -53,11 +58,14 @@ namespace Enemies
                 Tilemap tilemap = GameObjectLocator.Instance.Tilemap;
                 Vector3Int cellIndex = tilemap.WorldToCell(new(enemyPosition.x, enemyPosition.y, 0));
 
-                RefRW<LocalTransform> transform = SystemAPI.GetComponentRW<LocalTransform>(entity);
-                transform.ValueRW.Position = new float3(enemyPosition.x, enemyPosition.y, -5);
+                commandBuffer.SetComponent(entity, new LocalTransform()
+                {
+                    Position = new float3(enemyPosition.x, enemyPosition.y, -5),
+                    Scale = 0.5f
+                });
 
-                entityManager.AddComponent<PathfindingRequestPathData>(entity);
-                entityManager.SetComponentData(entity, new PathfindingRequestPathData()
+                commandBuffer.AddComponent<PathfindingRequestPathData>(entity);
+                commandBuffer.SetComponent(entity, new PathfindingRequestPathData()
                 {
                     StartCell = new(cellIndex.x, cellIndex.y),
                     EndCell = new(tilemapData.GridSize.x / 2, tilemapData.GridSize.y / 2), // TODO: Add more dynamic targets?
