@@ -21,7 +21,6 @@ namespace Pathfinding
             this.evenNeighborOffsets = PathHelpers.EvenNeighborOffsets;
             this.oddNeighborOffsets = PathHelpers.OddNeighborOffsets;
             state.RequireForUpdate<TilemapData>();
-
         }
 
         public void OnUpdate(ref SystemState state)

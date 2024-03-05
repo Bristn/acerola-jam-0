@@ -14,6 +14,8 @@ GameObject:
   - component: {fileID: 7943933160238490123}
   - component: {fileID: 3591020242469247622}
   - component: {fileID: 5878227472647747990}
+  - component: {fileID: 5578738587157956490}
+  - component: {fileID: 4634573063846758323}
   m_Layer: 0
   m_Name: Enemy Prefab
   m_TagString: Untagged
@@ -141,3 +143,28 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   baseHealth: 100
   currentHealth: 100
+--- !u!114 &5578738587157956490
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1089696477478625884}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3875476c02775be42996265c8e761c89, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &4634573063846758323
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1089696477478625884}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 50541420e3a32e7418f53577af1238e7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pickupPrefab: {fileID: 2298231653843124577, guid: 5b8f7b13cd9218e4fbabd9dad27355f7, type: 3}
