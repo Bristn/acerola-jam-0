@@ -1,3 +1,4 @@
+using Buildings.Base;
 using Cameras.Targets;
 using Common.Health;
 using Unity.Burst;
@@ -6,7 +7,6 @@ using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
 using UnityEngine;
-using UnityEngine.Tilemaps;
 
 namespace Buildings.Towers
 {
@@ -26,6 +26,7 @@ namespace Buildings.Towers
             var ecbSingleton = SystemAPI.GetSingleton<EndSimulationEntityCommandBufferSystem.Singleton>();
             EntityCommandBuffer commandBuffer = ecbSingleton.CreateCommandBuffer(state.WorldUnmanaged);
 
+            RefRW<BaseData> baseDate = SystemAPI.GetSingletonRW<BaseData>();
             foreach (var (towerTransform, tower) in SystemAPI.Query<RefRO<LocalTransform>, RefRW<TowerData>>())
             {
                 // Determine if this tower can fire at an enemy
@@ -35,7 +36,7 @@ namespace Buildings.Towers
                     tower.ValueRW.ReduceFireCooldown(Time.deltaTime);
                 }
 
-                canFire = tower.ValueRO.CanFire;
+                canFire = tower.ValueRO.CanFire && baseDate.ValueRO.AmmoResoruces > 0;
                 if (!canFire)
                 {
                     continue;
@@ -63,7 +64,6 @@ namespace Buildings.Towers
                 }
 
                 // Spawn the projectile entity
-                // TODO: Spawn all projectiles for different towers in one batch?
                 Entity prefab = tower.ValueRO.ProjectilePrefab;
                 NativeArray<Entity> instances = new(1, Allocator.Temp);
                 commandBuffer.Instantiate(prefab, instances);
@@ -88,23 +88,8 @@ namespace Buildings.Towers
                 }
 
                 tower.ValueRW.CanFire = false;
+                baseDate.ValueRW.AmmoResoruces--;
                 instances.Dispose();
-            }
-        }
-
-        [BurstCompile]
-        private partial struct GetTargetPositionJob : IJobEntity
-        {
-            public void Execute()
-            {
-            }
-        }
-
-        [BurstCompile]
-        private partial struct SpawnProjectilesJob : IJobEntity
-        {
-            public void Execute()
-            {
             }
         }
     }

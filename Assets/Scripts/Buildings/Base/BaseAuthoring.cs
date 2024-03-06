@@ -1,0 +1,29 @@
+using NaughtyAttributes;
+using Unity.Entities;
+using UnityEngine;
+
+namespace Buildings.Base
+{
+    public class BaseAuthoring : MonoBehaviour
+    {
+        /* --- Settings --- */
+
+        [SerializeField][BoxGroup("Settings")] private int buildingResoruce;
+        [SerializeField][BoxGroup("Settings")] private int ammoResoruce;
+
+        public class Baker : Baker<BaseAuthoring>
+        {
+            public override void Bake(BaseAuthoring authoring)
+            {
+                Debug.Log("BaseAuthoring: Bake");
+                Entity entity = GetEntity(TransformUsageFlags.None);
+
+                this.AddComponent(entity, new BaseData
+                {
+                    BuildingResoruces = authoring.buildingResoruce,
+                    AmmoResoruces = authoring.ammoResoruce,
+                });
+            }
+        }
+    }
+}

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Buildings.Base;
 using Pathfinding.Algorithm;
 using Players;
 using Unity.Burst;
@@ -23,6 +24,8 @@ namespace Tilemaps
             Debug.Log("TilemapSystem: OnCreate");
             this.updatePlayer = true;
             state.RequireForUpdate<TilemapData>();
+            state.RequireForUpdate<BaseData>();
+            state.RequireForUpdate<PlayerMovementData>();
         }
 
         [BurstCompile]
@@ -33,6 +36,9 @@ namespace Tilemaps
             {
                 return;
             }
+
+            var commandBufferSingleton = SystemAPI.GetSingleton<EndSimulationEntityCommandBufferSystem.Singleton>();
+            EntityCommandBuffer commandBuffer = commandBufferSingleton.CreateCommandBuffer(state.WorldUnmanaged);
 
             DynamicBuffer<TilemapNodesData> buffer = SystemAPI.GetSingletonBuffer<TilemapNodesData>();
             buffer.Clear();
@@ -80,6 +86,17 @@ namespace Tilemaps
                 foreach (var (transform, movement) in SystemAPI.Query<RefRW<LocalTransform>, RefRO<PlayerMovementData>>())
                 {
                     transform.ValueRW.Position = new(tilemapData.ValueRW.CenterOfGrid.x, tilemapData.ValueRW.CenterOfGrid.y, -5);
+                }
+
+                // TODO: Why does base prefab not have a LocalTransform by default?
+                foreach (var (baseBuilding, baseEntity) in SystemAPI.Query<RefRO<BaseData>>().WithEntityAccess())
+                {
+                    commandBuffer.AddComponent<LocalTransform>(baseEntity);
+                    commandBuffer.SetComponent(baseEntity, new LocalTransform()
+                    {
+                        Position = new(tilemapData.ValueRW.CenterOfGrid.x, tilemapData.ValueRW.CenterOfGrid.y, -5),
+                        Scale = 0.5f
+                    });
                 }
             }
         }

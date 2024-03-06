@@ -44,7 +44,7 @@ namespace Pickups
 
                     // Move Pickup towards collector
                     float2 direction = math.normalize(collectorPosition - pickupPosition);
-                    float speed = collector.ValueRO.PickupRadius - distance;
+                    float speed = (collector.ValueRO.PickupRadius - distance) * 2f;
                     float2 moveBy = direction * speed * Time.deltaTime;
                     pickupTransform.ValueRW.Position += new float3(moveBy.x, moveBy.y, 0);
                 }

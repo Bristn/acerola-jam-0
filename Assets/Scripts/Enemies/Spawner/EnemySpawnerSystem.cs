@@ -1,4 +1,5 @@
 using System;
+using Buildings.Base;
 using Pathfinding;
 using Tilemaps;
 using Unity.Burst;
@@ -50,6 +51,7 @@ namespace Enemies
             Entity prefab = spawnerData.ValueRO.Prefab;
             NativeArray<Entity> instances = new(1, Allocator.Temp);
             commandBuffer.Instantiate(prefab, instances);
+
 
             foreach (Entity entity in instances)
             {
