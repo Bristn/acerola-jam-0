@@ -1,0 +1,36 @@
+.text-primary {
+    color: rgb(70, 177, 201);
+}
+
+.text-secondary {
+    color: rgb(237, 37, 78);
+}
+
+.text-accent {
+    color: rgb(101, 86, 143);
+}
+
+.text-foreground {
+    color: rgb(255, 255, 252);
+}
+
+.text-background {
+    color: rgb(28, 29, 33);
+}
+
+.text-background-light {
+    color: rgb(47, 49, 55);
+}
+
+.text-on-background-dark {
+    color: rgba(255, 255, 252, 0.49);
+}
+
+.text-on-background {
+    color: rgb(255, 255, 252);
+}
+
+.text-on-primary {
+    color: rgb(28, 29, 33);
+}
+

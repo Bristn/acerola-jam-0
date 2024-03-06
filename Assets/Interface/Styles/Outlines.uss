@@ -1,0 +1,48 @@
+.outline-normal {
+    border-top-width: 5px;
+    border-right-width: 5px;
+    border-bottom-width: 5px;
+    border-left-width: 5px;
+}
+
+.outline-primary {
+    border-left-color: rgb(70, 177, 201);
+    border-right-color: rgb(70, 177, 201);
+    border-top-color: rgb(70, 177, 201);
+    border-bottom-color: rgb(70, 177, 201);
+}
+
+.outline-secondary {
+    border-left-color: rgb(237, 37, 78);
+    border-right-color: rgb(237, 37, 78);
+    border-top-color: rgb(237, 37, 78);
+    border-bottom-color: rgb(237, 37, 78);
+}
+
+.outline-accent {
+    border-left-color: rgb(101, 86, 143);
+    border-right-color: rgb(101, 86, 143);
+    border-top-color: rgb(101, 86, 143);
+    border-bottom-color: rgb(101, 86, 143);
+}
+
+.outline-foreground {
+    border-left-color: rgb(255, 255, 252);
+    border-right-color: rgb(255, 255, 252);
+    border-top-color: rgb(255, 255, 252);
+    border-bottom-color: rgb(255, 255, 252);
+}
+
+.outline-background {
+    border-left-color: rgb(28, 29, 33);
+    border-right-color: rgb(28, 29, 33);
+    border-top-color: rgb(28, 29, 33);
+    border-bottom-color: rgb(28, 29, 33);
+}
+
+.outline-background-light {
+    border-left-color: rgb(47, 49, 55);
+    border-right-color: rgb(47, 49, 55);
+    border-top-color: rgb(47, 49, 55);
+    border-bottom-color: rgb(47, 49, 55);
+}

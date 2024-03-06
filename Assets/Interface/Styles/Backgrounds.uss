@@ -1,0 +1,31 @@
+.background-transparent {
+    background-color: rgba(0, 0, 0, 0);
+}
+
+.background-primary {
+    background-color: rgb(70, 177, 201);
+}
+
+.background-secondary {
+    background-color: rgb(237, 37, 78);
+}
+
+.background-accent {
+    background-color: rgb(101, 86, 143);
+}
+
+.background-light {
+    background-color: rgb(255, 255, 252);
+}
+
+.background-dark-900 {
+    background-color: rgb(28, 29, 33);
+}
+
+.background-dark-800 {
+    background-color: rgb(47, 49, 55);
+}
+
+.background-dark-700 {
+    background-color: rgb(66, 68, 77);
+}

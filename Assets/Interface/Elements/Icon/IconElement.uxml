@@ -1,0 +1,6 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/Interface/Styles/Fonts.uss?fileID=7433441132597879392&amp;guid=78f96bf089b29ce4c8b7f6db21207dd2&amp;type=3#Fonts" />
+    <ui:VisualElement style="height: 30px; justify-content: center; flex-direction: row; align-items: center; width: 30px;">
+        <ui:Label text="\uf007" name="icon" class="text-on-primary text-icon-solid" style="-unity-text-align: middle-left;" />
+    </ui:VisualElement>
+</ui:UXML>

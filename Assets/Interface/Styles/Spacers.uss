@@ -1,0 +1,17 @@
+.horizontal-normal {
+    width: 30px;
+    flex-grow: 0;
+}
+
+.horizontal-half {
+    width: 15px;
+    flex-grow: 0;
+}
+
+.vertical-normal {
+    height: 30px;
+}
+
+.vertical-small {
+    height: 10px;
+}

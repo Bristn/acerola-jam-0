@@ -68,8 +68,6 @@ namespace Buildings.Towers
             Vector3Int cellIndex = tilemap.WorldToCell(worldPosition);
             Vector3 center = tilemap.GetCellCenterWorld(cellIndex);
 
-            Debug.Log(cellIndex);
-
             return new CellData()
             {
                 Index = new int3(cellIndex.x, cellIndex.y, 0),

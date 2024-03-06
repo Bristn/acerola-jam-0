@@ -1,0 +1,27 @@
+.text-normal {
+    -unity-font-definition: url('project://database/Assets/Interface/Fonts/Quicksand-SemiBold.ttf?fileID=12800000&guid=1bf81908d5dd6c24bbbcb0cfbd61ab8d&type=3#Quicksand-SemiBold');
+    font-size: 25px;
+    margin-left: 0;
+    margin-right: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+    padding-left: 0;
+    padding-right: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+.text-icon-brands {
+    -unity-font-definition: url('project://database/Assets/Interface/Fonts/Font%20Awesome%206%20Brands-Regular-400.otf?fileID=12800000&guid=1fe8c7f85361b7d40910fd8e947dc25a&type=3#Font Awesome 6 Brands-Regular-400');
+    font-size: 25px;
+}
+
+.text-icon-solid {
+    -unity-font-definition: url('project://database/Assets/Interface/Fonts/Font%20Awesome%206%20Free-Solid-900.otf?fileID=12800000&guid=93804868d6f3f2443807bd8229e2fc96&type=3#Font Awesome 6 Free-Solid-900');
+    font-size: 25px;
+}
+
+.text-icon-regular {
+    -unity-font-definition: url('project://database/Assets/Interface/Fonts/Font%20Awesome%206%20Free-Regular-400.otf?fileID=12800000&guid=f2f01a805b0c69c4c8e00825c8a1fd27&type=3#Font Awesome 6 Free-Regular-400');
+    font-size: 25px;
+}

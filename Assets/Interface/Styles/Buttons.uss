@@ -1,0 +1,41 @@
+.button {
+    transition-duration: 0.2s;
+}
+
+.button_button-hover {
+    transition-duration: 0.2s;
+    scale: 1.05 1.05;
+    rotate: 0.5deg;
+}
+
+.background-transparent_button-hover {
+    background-color: rgba(0, 0, 0, 0);
+}
+
+.background-primary_button-hover {
+    background-color: rgb(113, 195, 214);
+}
+
+.background-secondary_button-hover {
+    background-color: rgb(241, 85, 116);
+}
+
+.background-accent_button-hover {
+    background-color: rgb(130, 115, 171);
+}
+
+.background-light_button-hover {
+    background-color: rgb(255, 255, 252);
+}
+
+.background-dark-900_button-hover {
+    background-color: rgb(47, 49, 55);
+}
+
+.background-dark-800_button-hover {
+    background-color: rgb(66, 68, 77);
+}
+
+.background-dark-700_button-hover {
+    background-color: rgb(84, 87, 99);
+}

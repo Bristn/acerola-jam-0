@@ -1,0 +1,27 @@
+.cursor-transparent {
+    --unity-cursor-color: rgba(0, 0, 0, 0);
+}
+
+.cursor-primary {
+    --unity-cursor-color: rgb(70, 177, 201);
+}
+
+.cursor-secondary {
+    --unity-cursor-color: rgb(237, 37, 78);
+}
+
+.cursor-accent {
+    --unity-cursor-color: rgb(101, 86, 143);
+}
+
+.cursor-foreground {
+    --unity-cursor-color: rgb(255, 255, 252);
+}
+
+.cursor-background {
+    --unity-cursor-color: rgb(28, 29, 33);
+}
+
+.cursor-background-light {
+    --unity-cursor-color: rgb(47, 49, 55);
+}
