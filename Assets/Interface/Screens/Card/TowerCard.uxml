@@ -1,0 +1,14 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:VisualElement class="background-dark-900" style="flex-grow: 1; border-top-left-radius: 15px; border-top-right-radius: 15px; border-bottom-right-radius: 0; border-bottom-left-radius: 0; overflow: hidden;">
+        <ui:VisualElement name="header" style="flex-grow: 0; height: 60px; flex-direction: row;">
+            <ui:Label text="Default" name="tower-name-label" class="text-normal text-on-background" style="-unity-text-align: middle-center; flex-grow: 1;" />
+            <Interface.Elements.LinearElement spacing="10" round-children="NONE" class="background-primary" style="flex-direction: row; padding-right: 15px; padding-left: 15px; width: 110px;">
+                <Interface.Elements.IconElement icon="f552" color="ON_PRIMARY" class="text-normal" style="align-items: center; justify-content: center;" />
+                <ui:Label text="50" name="tower-cost-label" class="text-normal text-on-primary" style="-unity-text-align: middle-right; flex-grow: 1;" />
+            </Interface.Elements.LinearElement>
+        </ui:VisualElement>
+        <ui:VisualElement name="content" style="flex-grow: 1;">
+            <ui:Label text="- Medium range&#10;- Medium firerate&#10;- Medium targetting&#10;- Medium velocity" name="tower-description-label" class="text-normal text-on-background" style="margin-top: 15px; margin-right: 15px; margin-bottom: 15px; margin-left: 15px; flex-grow: 1; font-size: 20px;" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

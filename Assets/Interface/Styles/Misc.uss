@@ -18,3 +18,32 @@
     border-bottom-right-radius: 5px;
     border-bottom-left-radius: 5px;
 }
+
+.tower-card {
+    transition-duration: 0.2s;
+    width: 300px;
+    height: 60px;
+}
+
+.tower-card_card-hover {
+    transition-duration: 0.2s;
+    scale: 1.05 1.05;
+    rotate: 0.5deg;
+    height: 210px;
+}
+
+.tower-card-0_card-hover {
+    rotate: -2deg;
+}
+
+.tower-card-1_card-hover {
+    rotate: -1deg;
+}
+
+.tower-card-2_card-hover {
+    rotate: 1deg;
+}
+
+.tower-card-3_card-hover {
+    rotate: 2deg;
+}

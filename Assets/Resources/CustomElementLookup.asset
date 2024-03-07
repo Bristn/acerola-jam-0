@@ -17,3 +17,4 @@ MonoBehaviour:
   ButtonElement: {fileID: 9197481963319205126, guid: 098c65ff04405444ab7088bac380687d, type: 3}
   IconElement: {fileID: 9197481963319205126, guid: a4d86dbc6ffe417418855a5e9f5f7419, type: 3}
   LinearProgressBarElement: {fileID: 9197481963319205126, guid: 07565fe66e4185d40a0aa1d54351cb41, type: 3}
+  TowerCardElement: {fileID: 9197481963319205126, guid: 6caadd6d0d9a2454fa5aeddbddb95d4e, type: 3}

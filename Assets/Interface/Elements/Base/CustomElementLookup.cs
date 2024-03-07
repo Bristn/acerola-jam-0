@@ -35,5 +35,9 @@ namespace Interface.Elements
         [BoxGroup("Controls")] public VisualTreeAsset ButtonElement;
         [BoxGroup("Controls")] public VisualTreeAsset IconElement;
         [BoxGroup("Controls")] public VisualTreeAsset LinearProgressBarElement;
+
+        /* --- Misc --- */
+
+        [BoxGroup("Misc")] public VisualTreeAsset TowerCardElement;
     }
 }

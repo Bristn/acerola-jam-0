@@ -1,2 +1,27 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <Style src="project://database/Assets/Interface/Styles/Buttons.uss?fileID=7433441132597879392&amp;guid=4dd62531568dde7479a9123dcea1f345&amp;type=3#Buttons" />
+    <ui:VisualElement name="top-bar" style="flex-grow: 0; margin-top: 15px; margin-left: 15px; margin-right: 15px;">
+        <Interface.Elements.LinearElement name="building-resources">
+            <Interface.Elements.LinearElement spacing="15" round-children="NONE" class="background-dark-900" style="flex-direction: row; height: 60px; align-items: center; padding-right: 15px; padding-left: 15px; width: 120px;">
+                <Interface.Elements.IconElement icon="f552" />
+                <ui:Label text="500" name="building-resources-label" class="text-normal text-on-background" style="-unity-text-align: upper-right; flex-grow: 1;" />
+            </Interface.Elements.LinearElement>
+        </Interface.Elements.LinearElement>
+        <Interface.Elements.LinearElement name="ammo-resources" spacing="10" style="flex-direction: row;">
+            <Interface.Elements.LinearElement spacing="15" round-children="NONE" class="background-dark-900" style="flex-direction: row; height: 60px; align-items: center; padding-right: 15px; padding-left: 15px; width: 120px;">
+                <Interface.Elements.IconElement icon="e19b" />
+                <ui:Label text="100" name="ammo-resources-label" class="text-normal text-on-background" style="flex-grow: 1; -unity-text-align: upper-right;" />
+            </Interface.Elements.LinearElement>
+            <Interface.Elements.LinearElement spacing="15" round-children="NONE" class="background-dark-900" style="flex-direction: row; height: 60px; align-items: center; padding-left: 15px; width: 300px;">
+                <Interface.Elements.IconElement icon="f290" />
+                <Interface.Elements.LinearProgressBarElement name="player-bag-progress" value="1.46" style="position: relative; width: 164px; flex-grow: 1;" />
+            </Interface.Elements.LinearElement>
+        </Interface.Elements.LinearElement>
+    </ui:VisualElement>
+    <Interface.Elements.LinearElement name="tower-cards" spacing="30" style="position: absolute; bottom: 0; left: 0; right: 0; flex-direction: row; justify-content: center; align-items: flex-end; height: 210px;">
+        <Interface.Elements.TowerCardElement name="tower-default" tower-name="Default" tower-cost="50" tower-description="- Medium range &lt;br&gt;- Medium firerate &lt;br&gt;- Medium targetting &lt;br&gt;- Medium velocity &lt;br&gt; " twoer-type="0" tower-type="0" class="tower-card tower-card-0" />
+        <Interface.Elements.TowerCardElement name="tower-sniper" tower-name="Sniper" tower-description="- Long range &lt;br&gt;- Slow firerate &lt;br&gt;- Slow targetting &lt;br&gt;- Fast velocity &lt;br&gt; " tower-cost="50" twoer-type="1" tower-type="1" class="tower-card tower-card-1" />
+        <Interface.Elements.TowerCardElement name="tower-shotgun" tower-name="Shotgun" tower-description="- Short range &lt;br&gt;- Medium firerate &lt;br&gt;- Fast targetting &lt;br&gt;- Slow velocity &lt;br&gt; " twoer-type="2" tower-type="2" class="tower-card tower-card-2" />
+        <Interface.Elements.TowerCardElement name="tower-rifle" tower-name="Rifle" tower-description="- Medium range &lt;br&gt;- Fast firerate &lt;br&gt;- Medium targetting &lt;br&gt;- Medium velocity &lt;br&gt;" twoer-type="3" tower-type="3" class="tower-card tower-card-3" />
+    </Interface.Elements.LinearElement>
 </ui:UXML>

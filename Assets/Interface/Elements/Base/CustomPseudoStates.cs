@@ -9,6 +9,7 @@ public class CustomPseudoStates
     {
         TEST,
         BUTTON_HOVER,
+        CARD_HOVER,
     }
 
     public static readonly char Delimiter = '_';
@@ -22,5 +23,6 @@ public class CustomPseudoStates
     {
         { States.TEST, Delimiter + "test" },
         { States.BUTTON_HOVER, Delimiter + "button-hover" },
+        { States.CARD_HOVER, Delimiter + "card-hover" },
     };
 }
