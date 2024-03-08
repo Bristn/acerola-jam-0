@@ -14,7 +14,7 @@ public static class TilemapHelpers
         return new CellData()
         {
             Index = new int2(cellIndex.x, cellIndex.y),
-            Center = new float3(center.x, center.y, 0)
+            Center = new float3(center.x, center.y, -5)
         };
     }
 

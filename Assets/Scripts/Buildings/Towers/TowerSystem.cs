@@ -1,3 +1,4 @@
+using System;
 using Buildings.Base;
 using Cameras.Targets;
 using Common.Health;
@@ -13,11 +14,15 @@ namespace Buildings.Towers
     [UpdateInGroup(typeof(InitializationSystemGroup))]
     public partial struct TowerSystem : ISystem
     {
+        public static Action<int> AmmoResourcesUpdated;
+        private Unity.Mathematics.Random random;
+
         [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
             Debug.Log("TowerSystem: OnCreate");
             state.RequireForUpdate<TowerData>();
+            this.random = Unity.Mathematics.Random.CreateFromIndex(0);
         }
 
         [BurstCompile]
@@ -64,34 +69,47 @@ namespace Buildings.Towers
                     continue;
                 }
 
+                Debug.Log(nearestDistance);
+
                 // Spawn the projectile entity
-                Entity prefab = towerSpawner.ProjectilePrefab;
-                NativeArray<Entity> instances = new(1, Allocator.Temp);
-                commandBuffer.Instantiate(prefab, instances);
-
-                float2 baseDirection = math.normalizesafe(nearestPosition - towerPosition);
-                foreach (var projectile in instances)
-                {
-                    commandBuffer.AddComponent<TowerProjectileData>(projectile);
-                    commandBuffer.SetComponent(projectile, new TowerProjectileData()
-                    {
-                        Damage = 50,
-                        Direction = baseDirection,
-                        Speed = 10f
-                    });
-
-                    commandBuffer.SetComponent(projectile, new LocalTransform()
-                    {
-                        Position = new(towerPosition.x, towerPosition.y, -5),
-                        Scale = 0.2f,
-                        Rotation = quaternion.LookRotationSafe(math.forward(), new(baseDirection.x, baseDirection.y, 0))
-                    });
-                }
-
+                this.SpawnProjectiles(commandBuffer, tower.ValueRO, towerSpawner.ProjectilePrefab, nearestPosition, towerPosition);
                 tower.ValueRW.CanFire = false;
                 baseDate.ValueRW.AmmoResoruces--;
-                instances.Dispose();
+                AmmoResourcesUpdated?.Invoke(baseDate.ValueRO.AmmoResoruces);
             }
+        }
+
+        private void SpawnProjectiles(EntityCommandBuffer commandBuffer, TowerData towerData, Entity prefab, float2 targetPosition, float2 towerPosition)
+        {
+            NativeArray<Entity> instances = new(towerData.BulletCountPerShot, Allocator.Temp);
+            commandBuffer.Instantiate(prefab, instances);
+
+            foreach (var projectile in instances)
+            {
+                float2 offset = new(
+                    random.NextFloat(-towerData.BulletRandomness, towerData.BulletRandomness),
+                    random.NextFloat(-towerData.BulletRandomness, towerData.BulletRandomness)
+                );
+
+                float2 direction = math.normalizesafe(targetPosition + offset - towerPosition);
+
+                commandBuffer.AddComponent<TowerProjectileData>(projectile);
+                commandBuffer.SetComponent(projectile, new TowerProjectileData()
+                {
+                    Damage = 1,
+                    Direction = direction,
+                    Speed = towerData.BulletVelocity,
+                });
+
+                commandBuffer.SetComponent(projectile, new LocalTransform()
+                {
+                    Position = new(towerPosition.x, towerPosition.y, -5),
+                    Scale = 0.2f,
+                    Rotation = quaternion.LookRotationSafe(math.forward(), new(direction.x, direction.y, 0))
+                });
+            }
+
+            instances.Dispose();
         }
     }
 }

@@ -6,7 +6,6 @@ using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
 using UnityEngine;
-using UnityEngine.Tilemaps;
 using static TilemapHelpers;
 using static TowerHelpers;
 
@@ -17,7 +16,7 @@ namespace Buildings.Towers
     {
         public static Action NotEnoughResources;
         public static Action PositionAlreasyOccupied;
-        public static Action<int> ResourcesUpdated;
+        public static Action<int> BuildingResourcesUpdated;
 
         [BurstCompile]
         public void OnCreate(ref SystemState state)
@@ -46,9 +45,7 @@ namespace Buildings.Towers
                 transform.ValueRW.Scale = information.Radius;
             }
 
-            var ecbSingleton = SystemAPI.GetSingleton<EndSimulationEntityCommandBufferSystem.Singleton>();
-            EntityCommandBuffer commandBuffer = ecbSingleton.CreateCommandBuffer(state.WorldUnmanaged);
-
+            // Following code hanldes placing of tower. Therefore only execute once if the mouse is released
             if (!Input.GetMouseButtonUp(0))
             {
                 return;
@@ -74,6 +71,25 @@ namespace Buildings.Towers
                 }
             }
 
+            var ecbSingleton = SystemAPI.GetSingleton<EndSimulationEntityCommandBufferSystem.Singleton>();
+            EntityCommandBuffer commandBuffer = ecbSingleton.CreateCommandBuffer(state.WorldUnmanaged);
+            this.PlaceTower(commandBuffer, cellData, information);
+
+            // Update player materials
+            baseData.ValueRW.BuildingResoruces -= information.Cost;
+            BuildingResourcesUpdated?.Invoke(baseData.ValueRO.BuildingResoruces);
+        }
+
+        private void HideVisualiser(ref SystemState state)
+        {
+            foreach (var (transform, data) in SystemAPI.Query<RefRW<LocalTransform>, RefRO<TowerPlacemementData>>())
+            {
+                transform.ValueRW.Position.z = 100;
+            }
+        }
+
+        private void PlaceTower(EntityCommandBuffer commandBuffer, CellData cellData, TowerInformation towerInformation)
+        {
             // Place tower
             Entity prefab = SystemAPI.GetSingleton<TowerSpawnerData>().TowerPrefab;
             Entity instance = commandBuffer.Instantiate(prefab);
@@ -88,10 +104,20 @@ namespace Buildings.Towers
             // Set tower values
             commandBuffer.SetComponent(instance, new TowerData()
             {
-                Radius = information.Radius,
-                TotalFireCooldown = information.FireCooldown,
+                Radius = towerInformation.Radius,
+                BulletVelocity = towerInformation.BulletVelocity,
+                BulletCountPerShot = towerInformation.BulletCountPerShot,
+                BulletRandomness = towerInformation.BulletRandomness,
+
+                // Newly placed towers don't have to reload...
+                TotalFireCooldown = towerInformation.FireCooldown,
                 CurrentFireCooldown = 0,
                 CanFire = false,
+
+                // ... but they need to target their enemies first
+                TotalTargettingTime = towerInformation.TargettingTime,
+                CurrentTargettingTime = towerInformation.TargettingTime,
+                HasTarget = false,
             });
 
             // Position prefab
@@ -101,18 +127,6 @@ namespace Buildings.Towers
                 Scale = 0.5f,
                 Rotation = new(0, 0, 0, 1)
             });
-
-            // Update player materials
-            baseData.ValueRW.BuildingResoruces -= information.Cost;
-            ResourcesUpdated?.Invoke(baseData.ValueRO.BuildingResoruces);
-        }
-
-        private void HideVisualiser(ref SystemState state)
-        {
-            foreach (var (transform, data) in SystemAPI.Query<RefRW<LocalTransform>, RefRO<TowerPlacemementData>>())
-            {
-                transform.ValueRW.Position.z = 100;
-            }
         }
     }
 }
