@@ -97,6 +97,7 @@ namespace Buildings.Towers
                     Damage = 1,
                     Direction = direction,
                     Speed = towerData.BulletVelocity,
+                    Origin = towerPosition,
                 });
 
                 commandBuffer.SetComponent(projectile, new LocalTransform()

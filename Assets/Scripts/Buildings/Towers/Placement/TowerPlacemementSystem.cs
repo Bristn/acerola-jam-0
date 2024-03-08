@@ -15,7 +15,7 @@ namespace Buildings.Towers
     [UpdateInGroup(typeof(InitializationSystemGroup))]
     public partial class TowerPlacemementSystem : SystemBase
     {
-        public static Action SuccessfullyPlacedTower;
+        public static Action FinishedPlacement;
         public static Action NotEnoughResources;
         public static Action PositionAlreadyOccupied;
 
@@ -50,6 +50,7 @@ namespace Buildings.Towers
             }
 
             placementData.ValueRW.ShowPlacement = false;
+            FinishedPlacement.Invoke();
 
             // Check if enough money is present
             RefRW<BaseData> baseData = SystemAPI.GetSingletonRW<BaseData>();
@@ -74,8 +75,6 @@ namespace Buildings.Towers
 
             // Update player materials
             baseData.ValueRW.BuildingResoruces -= information.Cost;
-            SuccessfullyPlacedTower?.Invoke();
-
             commandBuffer.Playback(this.EntityManager);
             commandBuffer.Dispose();
         }

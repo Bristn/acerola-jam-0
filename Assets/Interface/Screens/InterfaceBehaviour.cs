@@ -30,7 +30,7 @@ public class InterfaceBehaviour : MonoBehaviour
         this.inventoryBar = (LinearProgressBarElement)root.Query("inventory-progress");
 
         // Callbacks
-        TowerPlacemementSystem.SuccessfullyPlacedTower += this.ResetCardClick;
+        TowerPlacemementSystem.FinishedPlacement += this.ResetCardClick;
         BaseSystem.BuildingResourcesUpdated += this.UpdateBuildingResources;
         BaseSystem.AmmoResourcesUpdated += this.UpdateAmmoResources;
         PickupSystem.PickedUpLoot += this.UpdateInventory;
