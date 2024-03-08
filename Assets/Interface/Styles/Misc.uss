@@ -32,6 +32,11 @@
     height: 210px;
 }
 
+.tower-card_card-click {
+    scale: 0.5 0.5;
+    opacity: 0
+}
+
 .tower-card-0_card-hover {
     rotate: -2deg;
 }

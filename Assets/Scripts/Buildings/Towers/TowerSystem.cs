@@ -26,6 +26,7 @@ namespace Buildings.Towers
             var ecbSingleton = SystemAPI.GetSingleton<EndSimulationEntityCommandBufferSystem.Singleton>();
             EntityCommandBuffer commandBuffer = ecbSingleton.CreateCommandBuffer(state.WorldUnmanaged);
 
+            TowerSpawnerData towerSpawner = SystemAPI.GetSingleton<TowerSpawnerData>();
             RefRW<BaseData> baseDate = SystemAPI.GetSingletonRW<BaseData>();
             foreach (var (towerTransform, tower) in SystemAPI.Query<RefRO<LocalTransform>, RefRW<TowerData>>())
             {
@@ -64,7 +65,7 @@ namespace Buildings.Towers
                 }
 
                 // Spawn the projectile entity
-                Entity prefab = tower.ValueRO.ProjectilePrefab;
+                Entity prefab = towerSpawner.ProjectilePrefab;
                 NativeArray<Entity> instances = new(1, Allocator.Temp);
                 commandBuffer.Instantiate(prefab, instances);
 

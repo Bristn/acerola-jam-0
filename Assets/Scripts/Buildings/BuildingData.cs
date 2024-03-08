@@ -7,6 +7,6 @@ namespace Buildings
     [System.Serializable]
     public struct BuildingData : IComponentData
     {
-        public int3 Index;
+        public int2 Index;
     }
 }

@@ -70,7 +70,7 @@ namespace Enemies
                 commandBuffer.SetComponent(entity, new PathfindingRequestPathData()
                 {
                     StartCell = new(cellIndex.x, cellIndex.y),
-                    EndCell = new(tilemapData.GridSize.x / 2, tilemapData.GridSize.y / 2), // TODO: Add more dynamic targets?
+                    EndCell = tilemapData.CenterCell,
                 });
             }
 

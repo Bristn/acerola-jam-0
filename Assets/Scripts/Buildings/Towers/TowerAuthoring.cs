@@ -21,7 +21,6 @@ namespace Buildings.Towers
 
                 this.AddComponent(entity, new TowerData
                 {
-                    ProjectilePrefab = this.GetEntity(authoring.projectilePrefab, TransformUsageFlags.Dynamic),
                     Radius = authoring.radius,
                     TotalFireCooldown = authoring.cooldown,
                     CurrentFireCooldown = authoring.cooldown,

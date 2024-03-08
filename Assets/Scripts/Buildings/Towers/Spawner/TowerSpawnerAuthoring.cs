@@ -9,7 +9,8 @@ namespace Buildings.Towers
     {
         /* --- References --- */
 
-        [SerializeField][BoxGroup("References")] private GameObject prefab;
+        [SerializeField][BoxGroup("References")] private GameObject towerPrefab;
+        [SerializeField][BoxGroup("References")] private GameObject projectilePrefab;
 
         public class Baker : Baker<TowerSpawnerAuthoring>
         {
@@ -20,7 +21,8 @@ namespace Buildings.Towers
 
                 this.AddComponent(entity, new TowerSpawnerData
                 {
-                    Prefab = this.GetEntity(authoring.prefab, TransformUsageFlags.Dynamic),
+                    TowerPrefab = this.GetEntity(authoring.towerPrefab, TransformUsageFlags.Dynamic),
+                    ProjectilePrefab = this.GetEntity(authoring.projectilePrefab, TransformUsageFlags.Dynamic),
                 });
             }
         }

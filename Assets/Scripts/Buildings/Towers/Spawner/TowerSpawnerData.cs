@@ -6,6 +6,7 @@ namespace Buildings.Towers
     [System.Serializable]
     public struct TowerSpawnerData : IComponentData
     {
-        public Entity Prefab;
+        public Entity TowerPrefab;
+        public Entity ProjectilePrefab;
     }
 }

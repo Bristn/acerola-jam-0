@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Buildings;
 using Buildings.Base;
 using Pathfinding.Algorithm;
 using Players;
@@ -77,6 +78,7 @@ namespace Tilemaps
             tilemapData.ValueRW.IsUpdated = true;
 
             // Update center of grid
+            tilemapData.ValueRW.CenterCell = new(buffer[buffer.Length / 2].Node.X, buffer[buffer.Length / 2].Node.Y);
             tilemapData.ValueRW.CenterOfGrid = buffer[buffer.Length / 2].WorldPosition;
 
             // Update player
@@ -88,15 +90,11 @@ namespace Tilemaps
                     transform.ValueRW.Position = new(tilemapData.ValueRW.CenterOfGrid.x, tilemapData.ValueRW.CenterOfGrid.y, -5);
                 }
 
-                // TODO: Why does base prefab not have a LocalTransform by default?
-                foreach (var (baseBuilding, baseEntity) in SystemAPI.Query<RefRO<BaseData>>().WithEntityAccess())
+                foreach (var (transform, baseData, buildingData) in SystemAPI.Query<RefRW<LocalTransform>, RefRO<BaseData>, RefRW<BuildingData>>())
                 {
-                    commandBuffer.AddComponent<LocalTransform>(baseEntity);
-                    commandBuffer.SetComponent(baseEntity, new LocalTransform()
-                    {
-                        Position = new(tilemapData.ValueRW.CenterOfGrid.x, tilemapData.ValueRW.CenterOfGrid.y, -5),
-                        Scale = 0.5f
-                    });
+                    buildingData.ValueRW.Index = tilemapData.ValueRO.CenterCell;
+                    transform.ValueRW.Position = new(tilemapData.ValueRO.CenterOfGrid.x, tilemapData.ValueRO.CenterOfGrid.y, -5);
+                    transform.ValueRW.Scale = 0.5f;
                 }
             }
         }

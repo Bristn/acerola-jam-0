@@ -16,7 +16,7 @@ namespace Buildings.Base
             public override void Bake(BaseAuthoring authoring)
             {
                 Debug.Log("BaseAuthoring: Bake");
-                Entity entity = GetEntity(TransformUsageFlags.None);
+                Entity entity = GetEntity(TransformUsageFlags.Dynamic);
 
                 this.AddComponent(entity, new BaseData
                 {

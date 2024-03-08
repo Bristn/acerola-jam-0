@@ -6,7 +6,6 @@ namespace Buildings.Towers
     [System.Serializable]
     public struct TowerData : IComponentData
     {
-        public Entity ProjectilePrefab;
         public float Radius;
         public float TotalFireCooldown;
         public float CurrentFireCooldown;
