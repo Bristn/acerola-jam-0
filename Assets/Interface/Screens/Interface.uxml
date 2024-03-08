@@ -14,7 +14,7 @@
             </Interface.Elements.LinearElement>
             <Interface.Elements.LinearElement spacing="15" round-children="NONE" class="background-dark-900" style="flex-direction: row; height: 60px; align-items: center; padding-left: 15px; width: 300px;">
                 <Interface.Elements.IconElement icon="f290" />
-                <Interface.Elements.LinearProgressBarElement name="player-bag-progress" value="1.46" style="position: relative; width: 164px; flex-grow: 1;" />
+                <Interface.Elements.LinearProgressBarElement name="inventory-progress" value="1.46" style="position: relative; width: 164px; flex-grow: 1;" />
             </Interface.Elements.LinearElement>
         </Interface.Elements.LinearElement>
     </ui:VisualElement>

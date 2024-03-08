@@ -9,6 +9,7 @@ namespace Pickups
         /* --- Settings --- */
 
         [SerializeField][BoxGroup("Settings")] private float pickupRadius;
+        [SerializeField][BoxGroup("Settings")] private int maxLoot;
 
         public class Baker : Baker<PickupCollectorAuthoring>
         {
@@ -19,7 +20,8 @@ namespace Pickups
 
                 this.AddComponent(entity, new PickupCollectorData
                 {
-                    PickupRadius = authoring.pickupRadius
+                    PickupRadius = authoring.pickupRadius,
+                    MaxPickups = authoring.maxLoot,
                 });
             }
         }

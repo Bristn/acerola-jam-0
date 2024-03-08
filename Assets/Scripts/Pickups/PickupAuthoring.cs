@@ -1,3 +1,4 @@
+using NaughtyAttributes;
 using Unity.Entities;
 using UnityEngine;
 
@@ -12,7 +13,7 @@ namespace Pickups
                 Debug.Log("PickupAuthoring: Bake");
                 Entity entity = GetEntity(TransformUsageFlags.None);
 
-                this.AddComponent(entity, new PickupData { });
+                this.AddComponent(entity, new PickupData() { });
             }
         }
     }

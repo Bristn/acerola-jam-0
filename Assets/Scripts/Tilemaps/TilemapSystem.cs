@@ -1,12 +1,8 @@
-using System.Collections.Generic;
 using Buildings;
 using Buildings.Base;
 using Pathfinding.Algorithm;
 using Players;
-using Unity.Burst;
-using Unity.Collections;
 using Unity.Entities;
-using Unity.Mathematics;
 using Unity.Transforms;
 using UnityEngine;
 using UnityEngine.Tilemaps;
@@ -14,32 +10,26 @@ using static TileBaseLookup;
 
 namespace Tilemaps
 {
-    [UpdateInGroup(typeof(InitializationSystemGroup))]
-    public partial struct TilemapSystem : ISystem
+    public partial class TilemapSystem : SystemBase
     {
         private bool updatePlayer;
 
-        [BurstCompile]
-        public void OnCreate(ref SystemState state)
+        protected override void OnCreate()
         {
-            Debug.Log("TilemapSystem: OnCreate");
+            this.RequireForUpdate<TilemapData>();
+            this.RequireForUpdate<TilemapNodesData>();
+            this.RequireForUpdate<BaseData>();
+            this.RequireForUpdate<PlayerMovementData>();
             this.updatePlayer = true;
-            state.RequireForUpdate<TilemapData>();
-            state.RequireForUpdate<BaseData>();
-            state.RequireForUpdate<PlayerMovementData>();
         }
 
-        [BurstCompile]
-        public void OnUpdate(ref SystemState state)
+        protected override void OnUpdate()
         {
             RefRW<TilemapData> tilemapData = SystemAPI.GetSingletonRW<TilemapData>();
             if (tilemapData.ValueRO.IsUpdated)
             {
                 return;
             }
-
-            var commandBufferSingleton = SystemAPI.GetSingleton<EndSimulationEntityCommandBufferSystem.Singleton>();
-            EntityCommandBuffer commandBuffer = commandBufferSingleton.CreateCommandBuffer(state.WorldUnmanaged);
 
             DynamicBuffer<TilemapNodesData> buffer = SystemAPI.GetSingletonBuffer<TilemapNodesData>();
             buffer.Clear();
@@ -85,12 +75,13 @@ namespace Tilemaps
             if (this.updatePlayer)
             {
                 this.updatePlayer = false;
-                foreach (var (transform, movement) in SystemAPI.Query<RefRW<LocalTransform>, RefRO<PlayerMovementData>>())
+
+                foreach (var (transform, _) in SystemAPI.Query<RefRW<LocalTransform>, RefRO<PlayerMovementData>>())
                 {
                     transform.ValueRW.Position = new(tilemapData.ValueRW.CenterOfGrid.x, tilemapData.ValueRW.CenterOfGrid.y, -5);
                 }
 
-                foreach (var (transform, baseData, buildingData) in SystemAPI.Query<RefRW<LocalTransform>, RefRO<BaseData>, RefRW<BuildingData>>())
+                foreach (var (transform, _, buildingData) in SystemAPI.Query<RefRW<LocalTransform>, RefRO<BaseData>, RefRW<BuildingData>>())
                 {
                     buildingData.ValueRW.Index = tilemapData.ValueRO.CenterCell;
                     transform.ValueRW.Position = new(tilemapData.ValueRO.CenterOfGrid.x, tilemapData.ValueRO.CenterOfGrid.y, -5);

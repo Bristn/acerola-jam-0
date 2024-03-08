@@ -45,32 +45,6 @@ namespace Interface.Elements
             {
                 this.SetPseudoState(CustomPseudoStates.States.CARD_HOVER, false);
             });
-
-            this.RegisterCallback<PointerDownEvent>((pointerEvent) =>
-            {
-                this.SetPseudoState(CustomPseudoStates.States.CARD_CLICK, true);
-
-                EntityManager entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
-                EntityQuery placementData = entityManager.CreateEntityQuery(new ComponentType[] { typeof(TowerPlacemementData) });
-
-                bool hasData = placementData.TryGetSingletonEntity<TowerPlacemementData>(out Entity colorTablesEntity);
-                if (!hasData)
-                {
-                    Debug.Log("No PlacementData found!");
-                    return;
-                }
-
-                entityManager.SetComponentData(colorTablesEntity, new TowerPlacemementData()
-                {
-                    ShowPlacement = true,
-                    TowerType = this.TowerType
-                });
-            });
-
-            this.RegisterCallback<PointerUpEvent>((pointerEvent) =>
-            {
-                this.SetPseudoState(CustomPseudoStates.States.CARD_CLICK, false);
-            });
         }
     }
 }

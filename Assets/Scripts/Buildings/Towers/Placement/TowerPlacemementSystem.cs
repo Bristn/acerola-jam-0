@@ -2,6 +2,7 @@ using System;
 using Buildings.Base;
 using Cameras.Targets;
 using Unity.Burst;
+using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
@@ -12,26 +13,23 @@ using static TowerHelpers;
 namespace Buildings.Towers
 {
     [UpdateInGroup(typeof(InitializationSystemGroup))]
-    public partial struct TowerPlacemementSystem : ISystem
+    public partial class TowerPlacemementSystem : SystemBase
     {
+        public static Action SuccessfullyPlacedTower;
         public static Action NotEnoughResources;
-        public static Action PositionAlreasyOccupied;
-        public static Action<int> BuildingResourcesUpdated;
+        public static Action PositionAlreadyOccupied;
 
-        [BurstCompile]
-        public void OnCreate(ref SystemState state)
+        protected override void OnCreate()
         {
-            Debug.Log("TowerPlacememenSystem: OnCreate");
-            state.RequireForUpdate<TowerPlacemementData>();
+            this.RequireForUpdate<TowerPlacemementData>();
         }
 
-        [BurstCompile]
-        public void OnUpdate(ref SystemState state)
+        protected override void OnUpdate()
         {
             RefRW<TowerPlacemementData> placementData = SystemAPI.GetSingletonRW<TowerPlacemementData>();
             if (!placementData.ValueRO.ShowPlacement)
             {
-                this.HideVisualiser(ref state);
+                this.HideVisualiser();
                 return;
             }
 
@@ -66,21 +64,23 @@ namespace Buildings.Towers
             {
                 if (building.ValueRO.Index.Equals(cellData.Index))
                 {
-                    PositionAlreasyOccupied?.Invoke();
+                    PositionAlreadyOccupied?.Invoke();
                     return;
                 }
             }
 
-            var ecbSingleton = SystemAPI.GetSingleton<EndSimulationEntityCommandBufferSystem.Singleton>();
-            EntityCommandBuffer commandBuffer = ecbSingleton.CreateCommandBuffer(state.WorldUnmanaged);
+            EntityCommandBuffer commandBuffer = new EntityCommandBuffer(Allocator.TempJob);
             this.PlaceTower(commandBuffer, cellData, information);
 
             // Update player materials
             baseData.ValueRW.BuildingResoruces -= information.Cost;
-            BuildingResourcesUpdated?.Invoke(baseData.ValueRO.BuildingResoruces);
+            SuccessfullyPlacedTower?.Invoke();
+
+            commandBuffer.Playback(this.EntityManager);
+            commandBuffer.Dispose();
         }
 
-        private void HideVisualiser(ref SystemState state)
+        private void HideVisualiser()
         {
             foreach (var (transform, data) in SystemAPI.Query<RefRW<LocalTransform>, RefRO<TowerPlacemementData>>())
             {

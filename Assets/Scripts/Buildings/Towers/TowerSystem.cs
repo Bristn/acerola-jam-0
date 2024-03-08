@@ -14,7 +14,8 @@ namespace Buildings.Towers
     [UpdateInGroup(typeof(InitializationSystemGroup))]
     public partial struct TowerSystem : ISystem
     {
-        public static Action<int> AmmoResourcesUpdated;
+        /* --- Values --- */
+
         private Unity.Mathematics.Random random;
 
         [BurstCompile]
@@ -32,7 +33,7 @@ namespace Buildings.Towers
             EntityCommandBuffer commandBuffer = ecbSingleton.CreateCommandBuffer(state.WorldUnmanaged);
 
             TowerSpawnerData towerSpawner = SystemAPI.GetSingleton<TowerSpawnerData>();
-            RefRW<BaseData> baseDate = SystemAPI.GetSingletonRW<BaseData>();
+            RefRW<BaseData> baseData = SystemAPI.GetSingletonRW<BaseData>();
             foreach (var (towerTransform, tower) in SystemAPI.Query<RefRO<LocalTransform>, RefRW<TowerData>>())
             {
                 // Determine if this tower can fire at an enemy
@@ -42,7 +43,7 @@ namespace Buildings.Towers
                     tower.ValueRW.ReduceFireCooldown(Time.deltaTime);
                 }
 
-                canFire = tower.ValueRO.CanFire && baseDate.ValueRO.AmmoResoruces > 0;
+                canFire = tower.ValueRO.CanFire && baseData.ValueRO.AmmoResoruces > 0;
                 if (!canFire)
                 {
                     continue;
@@ -69,13 +70,10 @@ namespace Buildings.Towers
                     continue;
                 }
 
-                Debug.Log(nearestDistance);
-
                 // Spawn the projectile entity
                 this.SpawnProjectiles(commandBuffer, tower.ValueRO, towerSpawner.ProjectilePrefab, nearestPosition, towerPosition);
                 tower.ValueRW.CanFire = false;
-                baseDate.ValueRW.AmmoResoruces--;
-                AmmoResourcesUpdated?.Invoke(baseDate.ValueRO.AmmoResoruces);
+                baseData.ValueRW.AmmoResoruces -= 1;
             }
         }
 

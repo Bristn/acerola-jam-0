@@ -1,4 +1,6 @@
+using System;
 using Unity.Burst;
+using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
@@ -6,26 +8,26 @@ using UnityEngine;
 
 namespace Pickups
 {
-    public partial struct PickupSystem : ISystem
+    public partial class PickupSystem : SystemBase
     {
+        public static Action<int, int> PickedUpLoot;
+
         [BurstCompile]
-        public void OnCreate(ref SystemState state)
+        protected override void OnCreate()
         {
-            Debug.Log("PickupSystem: OnCreate");
-            state.RequireForUpdate<PickupData>();
+            this.RequireForUpdate<PickupData>();
         }
 
         [BurstCompile]
-        public void OnUpdate(ref SystemState state)
+        protected override void OnUpdate()
         {
-            var commandBufferSingleton = SystemAPI.GetSingleton<EndSimulationEntityCommandBufferSystem.Singleton>();
-            EntityCommandBuffer commandBuffer = commandBufferSingleton.CreateCommandBuffer(state.WorldUnmanaged);
+            EntityCommandBuffer commandBuffer = new(Allocator.Temp);
 
             foreach (var (collectorTransform, collector) in SystemAPI.Query<RefRO<LocalTransform>, RefRW<PickupCollectorData>>())
             {
                 float2 collectorPosition = new(collectorTransform.ValueRO.Position.x, collectorTransform.ValueRO.Position.y);
 
-                foreach (var (pickupTransform, pickup, pickupEntity) in SystemAPI.Query<RefRW<LocalTransform>, RefRO<PickupData>>().WithEntityAccess())
+                foreach (var (pickupTransform, _, pickupEntity) in SystemAPI.Query<RefRW<LocalTransform>, RefRO<PickupData>>().WithEntityAccess())
                 {
                     float2 pickupPosition = new(pickupTransform.ValueRO.Position.x, pickupTransform.ValueRO.Position.y);
                     float distance = math.distance(collectorPosition, pickupPosition);
@@ -39,16 +41,20 @@ namespace Pickups
                     {
                         commandBuffer.DestroyEntity(pickupEntity);
                         collector.ValueRW.StoredPickups++;
+                        PickedUpLoot.Invoke(collector.ValueRO.StoredPickups, collector.ValueRO.MaxPickups);
                         continue;
                     }
 
                     // Move Pickup towards collector
                     float2 direction = math.normalize(collectorPosition - pickupPosition);
                     float speed = (collector.ValueRO.PickupRadius - distance) * 2f;
-                    float2 moveBy = direction * speed * Time.deltaTime;
+                    float2 moveBy = direction * speed * SystemAPI.Time.DeltaTime;
                     pickupTransform.ValueRW.Position += new float3(moveBy.x, moveBy.y, 0);
                 }
             }
+
+            commandBuffer.Playback(this.EntityManager);
+            commandBuffer.Dispose();
         }
     }
 }

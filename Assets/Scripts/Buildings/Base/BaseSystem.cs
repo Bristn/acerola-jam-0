@@ -1,31 +1,36 @@
-using Cameras.Targets;
-using Common.Health;
-using Unity.Burst;
-using Unity.Collections;
+using System;
 using Unity.Entities;
-using Unity.Mathematics;
-using Unity.Transforms;
-using UnityEngine;
-using UnityEngine.Tilemaps;
 
 namespace Buildings.Base
 {
     [UpdateInGroup(typeof(InitializationSystemGroup))]
-    public partial struct BaseSystem : ISystem
+    public partial class BaseSystem : SystemBase
     {
-        [BurstCompile]
-        public void OnCreate(ref SystemState state)
+        public static Action<int> BuildingResourcesUpdated;
+        public static Action<int> AmmoResourcesUpdated;
+
+        public static BaseData currentData { get; private set; }
+
+        protected override void OnCreate()
         {
-            Debug.Log("BaseSystem: OnCreate");
-            state.RequireForUpdate<BaseData>();
+            this.RequireForUpdate<BaseData>();
         }
 
-        [BurstCompile]
-        public void OnUpdate(ref SystemState state)
+        protected override void OnUpdate()
         {
-            var ecbSingleton = SystemAPI.GetSingleton<EndSimulationEntityCommandBufferSystem.Singleton>();
-            EntityCommandBuffer commandBuffer = ecbSingleton.CreateCommandBuffer(state.WorldUnmanaged);
+            BaseData baseData = SystemAPI.GetSingleton<BaseData>();
 
+            if (baseData.AmmoResoruces != currentData.AmmoResoruces)
+            {
+                AmmoResourcesUpdated?.Invoke(baseData.AmmoResoruces);
+            }
+
+            if (baseData.BuildingResoruces != currentData.BuildingResoruces)
+            {
+                BuildingResourcesUpdated?.Invoke(baseData.BuildingResoruces);
+            }
+
+            currentData = baseData;
         }
     }
 }
