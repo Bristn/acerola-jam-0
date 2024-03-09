@@ -1,12 +1,15 @@
 using Buildings.Towers;
 using Cameras.Targets;
+using Players;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
+using Unity.Jobs;
 using Unity.Mathematics;
 using Unity.Transforms;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using UnityEngine.UIElements;
 
 namespace Common.Health
 {
@@ -25,10 +28,17 @@ namespace Common.Health
             var commandBufferSingleton = SystemAPI.GetSingleton<EndSimulationEntityCommandBufferSystem.Singleton>();
             EntityCommandBuffer commandBuffer = commandBufferSingleton.CreateCommandBuffer(state.WorldUnmanaged);
 
-            new KillEnemyJob()
+            JobHandle enemyJob = new KillEnemyJob()
             {
                 CommandBuffer = commandBuffer.AsParallelWriter(),
-            }.ScheduleParallel();
+            }.ScheduleParallel(new JobHandle());
+            enemyJob.Complete();
+
+            JobHandle playerJob = new KillPlayerJob()
+            {
+                CommandBuffer = commandBuffer.AsParallelWriter(),
+            }.ScheduleParallel(enemyJob);
+            playerJob.Complete();
         }
 
 
@@ -36,7 +46,6 @@ namespace Common.Health
         private partial struct KillEnemyJob : IJobEntity
         {
             public EntityCommandBuffer.ParallelWriter CommandBuffer;
-
 
             public void Execute(Entity entity, [EntityIndexInQuery] int sortKey, ref HealthData health, in EnemyData enemy, in LocalTransform enemyTransform)
             {
@@ -60,6 +69,24 @@ namespace Common.Health
 
                 this.CommandBuffer.DestroyEntity(sortKey, entity);
                 instances.Dispose();
+            }
+        }
+
+        [BurstCompile]
+        private partial struct KillPlayerJob : IJobEntity
+        {
+            public EntityCommandBuffer.ParallelWriter CommandBuffer;
+
+            public void Execute(Entity entity, [EntityIndexInQuery] int sortKey, ref HealthData health, in PlayerMovementData player, in LocalTransform playerTransform)
+            {
+                if (health.CurrentHealth > 0)
+                {
+                    return;
+                }
+
+                // TODO: Move camera to center (gradual movement), reduce lifes & teleport player & show dialog
+
+                this.CommandBuffer.DestroyEntity(sortKey, entity);
             }
         }
     }

@@ -37,8 +37,6 @@ namespace Buildings.Towers
                     if (distance <= 0.2f)
                     {
                         health.ValueRW.CurrentHealth -= projectile.ValueRO.Damage;
-
-                        // TODO: Destroy projectile (Don't apply to sniper)
                     }
                 }
 
