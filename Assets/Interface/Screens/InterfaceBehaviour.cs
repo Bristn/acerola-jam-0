@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Buildings.Base;
 using Buildings.Towers;
@@ -10,12 +11,15 @@ using UnityEngine.UIElements;
 
 public class InterfaceBehaviour : MonoBehaviour
 {
+    public static Action<string> ChangedGenericHint;
+
     /* --- References --- */
 
     [SerializeField][BoxGroup("References")] private UIDocument document;
 
     /* --- Values --- */
 
+    private Label genericHintLabel;
     private StatElement playerLifes;
     private StatElement buildingResources;
     private StatElement ammoResources;
@@ -26,16 +30,18 @@ public class InterfaceBehaviour : MonoBehaviour
     {
         // References
         VisualElement root = this.document.rootVisualElement;
+        this.genericHintLabel = (Label)root.Query("generic-hint-label");
         this.playerLifes = (StatElement)root.Query("player-lifes");
         this.buildingResources = (StatElement)root.Query("building-resources");
         this.ammoResources = (StatElement)root.Query("ammo-resources");
         this.inventoryBar = (LinearProgressBarElement)root.Query("inventory-progress");
 
         // Callbacks
-        TowerPlacemementSystem.FinishedPlacement += this.ResetCardClick;
+        TowerPlacemementSystem.FinishedPlacement += this.ReleasedTowerCard;
         BaseSystem.BuildingResourcesUpdated += this.UpdateBuildingResources;
         BaseSystem.AmmoResourcesUpdated += this.UpdateAmmoResources;
         PickupSystem.PickedUpLoot += this.UpdateInventory;
+        ChangedGenericHint += this.SetGenericHint;
 
         // Initial values
         this.UpdateAmmoResources(BaseSystem.currentData.AmmoResoruces);
@@ -64,7 +70,19 @@ public class InterfaceBehaviour : MonoBehaviour
     {
         this.inventoryBar.Max = max;
         this.inventoryBar.SetValue(value, 0.1f, DG.Tweening.Ease.InOutCubic);
-        this.inventoryBar.ShowText = value >= max;
+
+        bool inventoryFull = value >= max;
+        if (inventoryFull)
+        {
+            ChangedGenericHint.Invoke("Drop off ammo at base");
+        }
+
+        this.inventoryBar.ShowText = inventoryFull;
+    }
+
+    private void SetGenericHint(string value)
+    {
+        this.genericHintLabel.SetText(value);
     }
 
     private void SetupTowerCards()
@@ -81,7 +99,7 @@ public class InterfaceBehaviour : MonoBehaviour
         foreach (TowerCardElement card in this.cards)
         {
             card.RegisterCallback<PointerDownEvent>((pointerEvent) => this.ClickCard(card));
-            card.RegisterCallback<PointerUpEvent>((pointerEvent) => this.ResetCardClick());
+            card.RegisterCallback<PointerUpEvent>((pointerEvent) => this.ReleasedTowerCard());
         }
     }
 
@@ -97,16 +115,20 @@ public class InterfaceBehaviour : MonoBehaviour
             entityManager.SetComponentData(entity, new TowerPlacemementData()
             {
                 ShowPlacement = true,
-                TowerType = card.TowerType
+                TowerType = card.TowerType,
             });
+
+            ChangedGenericHint.Invoke("Press ESCAPE to cancel placement");
         }
     }
 
-    private void ResetCardClick()
+    private void ReleasedTowerCard()
     {
         foreach (TowerCardElement card in this.cards)
         {
             card.SetPseudoState(CustomPseudoStates.States.CARD_CLICK, false);
         }
+
+        ChangedGenericHint.Invoke("Drag & drop to place towers");
     }
 }

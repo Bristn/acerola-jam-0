@@ -17,4 +17,7 @@
         <Interface.Elements.TowerCardElement name="tower-shotgun" tower-name="Shotgun" tower-description="- Short range &lt;br&gt;- Medium firerate &lt;br&gt;- Fast targetting &lt;br&gt;- Slow velocity &lt;br&gt; " twoer-type="2" tower-type="2" class="tower-card tower-card-2" />
         <Interface.Elements.TowerCardElement name="tower-rifle" tower-name="Rifle" tower-description="- Medium range &lt;br&gt;- Fast firerate &lt;br&gt;- Medium targetting &lt;br&gt;- Medium velocity &lt;br&gt;" twoer-type="3" tower-type="3" class="tower-card tower-card-3" />
     </Interface.Elements.LinearElement>
+    <ui:VisualElement style="flex-grow: 1; position: absolute; left: 0; right: 0; bottom: 220px; align-items: center;">
+        <ui:Label text="Drag &amp; Drop to place tower" name="generic-hint-label" class="text-normal text-background" />
+    </ui:VisualElement>
 </ui:UXML>

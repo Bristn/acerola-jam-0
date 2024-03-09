@@ -25,8 +25,13 @@ namespace Pickups
 
             foreach (var (collectorTransform, collector) in SystemAPI.Query<RefRO<LocalTransform>, RefRW<PickupCollectorData>>())
             {
-                float2 collectorPosition = new(collectorTransform.ValueRO.Position.x, collectorTransform.ValueRO.Position.y);
+                // If colelctor is full, don't attract pickups
+                if (collector.ValueRO.StoredPickups >= collector.ValueRO.MaxPickups)
+                {
+                    continue;
+                }
 
+                float2 collectorPosition = new(collectorTransform.ValueRO.Position.x, collectorTransform.ValueRO.Position.y);
                 foreach (var (pickupTransform, _, pickupEntity) in SystemAPI.Query<RefRW<LocalTransform>, RefRO<PickupData>>().WithEntityAccess())
                 {
                     float2 pickupPosition = new(pickupTransform.ValueRO.Position.x, pickupTransform.ValueRO.Position.y);

@@ -33,6 +33,15 @@ namespace Buildings.Towers
                 return;
             }
 
+            // Allow to cancel placement
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                this.HideVisualiser();
+                placementData.ValueRW.ShowPlacement = false;
+                FinishedPlacement.Invoke();
+                return;
+            }
+
             TowerInformation information = TowerHelpers.Towers[placementData.ValueRO.TowerType];
 
             // Update the visualiser 
