@@ -18,3 +18,4 @@ MonoBehaviour:
   IconElement: {fileID: 9197481963319205126, guid: a4d86dbc6ffe417418855a5e9f5f7419, type: 3}
   LinearProgressBarElement: {fileID: 9197481963319205126, guid: 07565fe66e4185d40a0aa1d54351cb41, type: 3}
   TowerCardElement: {fileID: 9197481963319205126, guid: 6caadd6d0d9a2454fa5aeddbddb95d4e, type: 3}
+  StatElement: {fileID: 9197481963319205126, guid: de1873cbead05ce4db3513e0e75a848d, type: 3}

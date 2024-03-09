@@ -39,5 +39,6 @@ namespace Interface.Elements
         /* --- Misc --- */
 
         [BoxGroup("Misc")] public VisualTreeAsset TowerCardElement;
+        [BoxGroup("Misc")] public VisualTreeAsset StatElement;
     }
 }

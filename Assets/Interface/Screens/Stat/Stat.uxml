@@ -1,0 +1,6 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Interface.Elements.LinearElement spacing="15" round-children="NONE" name="background" class="background-dark-900" style="flex-direction: row; align-items: center; padding-right: 15px; padding-left: 15px; flex-grow: 1;">
+        <Interface.Elements.IconElement icon="f183" name="stat-icon" />
+        <ui:Label text="5" name="value-label" class="text-normal text-on-background" style="-unity-text-align: upper-right; flex-grow: 1;" />
+    </Interface.Elements.LinearElement>
+</ui:UXML>

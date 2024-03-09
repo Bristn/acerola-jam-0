@@ -16,8 +16,9 @@ public class InterfaceBehaviour : MonoBehaviour
 
     /* --- Values --- */
 
-    private Label buildingResourcesLabel;
-    private Label ammoResourcesLabel;
+    private StatElement playerLifes;
+    private StatElement buildingResources;
+    private StatElement ammoResources;
     private LinearProgressBarElement inventoryBar;
     private List<TowerCardElement> cards = new();
 
@@ -25,8 +26,9 @@ public class InterfaceBehaviour : MonoBehaviour
     {
         // References
         VisualElement root = this.document.rootVisualElement;
-        this.buildingResourcesLabel = (Label)root.Query("building-resources-label");
-        this.ammoResourcesLabel = (Label)root.Query("ammo-resources-label");
+        this.playerLifes = (StatElement)root.Query("player-lifes");
+        this.buildingResources = (StatElement)root.Query("building-resources");
+        this.ammoResources = (StatElement)root.Query("ammo-resources");
         this.inventoryBar = (LinearProgressBarElement)root.Query("inventory-progress");
 
         // Callbacks
@@ -43,20 +45,26 @@ public class InterfaceBehaviour : MonoBehaviour
         this.SetupTowerCards();
     }
 
+    private void UpdatePlayerLifes(int value)
+    {
+        this.playerLifes.Value = value.ToString();
+    }
+
     private void UpdateBuildingResources(int value)
     {
-        this.buildingResourcesLabel.SetText(value.ToString());
+        this.buildingResources.Value = value.ToString();
     }
 
     private void UpdateAmmoResources(int value)
     {
-        this.ammoResourcesLabel.SetText(value.ToString());
+        this.ammoResources.Value = value.ToString();
     }
 
     private void UpdateInventory(int value, int max)
     {
         this.inventoryBar.Max = max;
         this.inventoryBar.SetValue(value, 0.1f, DG.Tweening.Ease.InOutCubic);
+        this.inventoryBar.ShowText = value >= max;
     }
 
     private void SetupTowerCards()
