@@ -3,6 +3,7 @@ using Buildings.Base;
 using Pathfinding.Algorithm;
 using Players;
 using Unity.Entities;
+using Unity.Mathematics;
 using Unity.Transforms;
 using UnityEngine;
 using UnityEngine.Tilemaps;
@@ -12,6 +13,7 @@ namespace Tilemaps
 {
     public partial class TilemapSystem : SystemBase
     {
+        public static int2 Center = new(20, 20);
         private bool updatePlayer;
 
         protected override void OnCreate()
@@ -68,8 +70,9 @@ namespace Tilemaps
             tilemapData.ValueRW.IsUpdated = true;
 
             // Update center of grid
-            tilemapData.ValueRW.CenterCell = new(buffer[buffer.Length / 2].Node.X, buffer[buffer.Length / 2].Node.Y);
-            tilemapData.ValueRW.CenterOfGrid = buffer[buffer.Length / 2].WorldPosition;
+            Vector3 gridCenter = tilemap.GetCellCenterWorld(new(Center.x, Center.y, 0));
+            tilemapData.ValueRW.CenterOfGrid = new(gridCenter.x, gridCenter.y);
+            tilemapData.ValueRW.CenterCell = Center;
 
             // Update player
             if (this.updatePlayer)
@@ -83,7 +86,7 @@ namespace Tilemaps
 
                 foreach (var (transform, _, buildingData) in SystemAPI.Query<RefRW<LocalTransform>, RefRO<BaseData>, RefRW<BuildingData>>())
                 {
-                    buildingData.ValueRW.Index = tilemapData.ValueRO.CenterCell;
+                    buildingData.ValueRW.Index = Center;
                     transform.ValueRW.Position = new(tilemapData.ValueRO.CenterOfGrid.x, tilemapData.ValueRO.CenterOfGrid.y, -5);
                     transform.ValueRW.Scale = 0.5f;
                 }

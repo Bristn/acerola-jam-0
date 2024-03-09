@@ -18,6 +18,7 @@ namespace Buildings.Towers
         public static Action FinishedPlacement;
         public static Action NotEnoughResources;
         public static Action PositionAlreadyOccupied;
+        public static Action PositionInvalid;
 
         protected override void OnCreate()
         {
@@ -60,6 +61,13 @@ namespace Buildings.Towers
 
             placementData.ValueRW.ShowPlacement = false;
             FinishedPlacement.Invoke();
+
+            // Check if cell is valid
+            if (!InvalidTiles.Instance.IsCellValid(cellData.Index))
+            {
+                PositionInvalid?.Invoke();
+                return;
+            }
 
             // Check if enough money is present
             RefRW<BaseData> baseData = SystemAPI.GetSingletonRW<BaseData>();
