@@ -6,8 +6,8 @@ namespace Buildings.Base
     [UpdateInGroup(typeof(InitializationSystemGroup))]
     public partial class BaseSystem : SystemBase
     {
-        public static Action<int> BuildingResourcesUpdated;
-        public static Action<int> AmmoResourcesUpdated;
+        public static Action<int, int> BuildingResourcesUpdated;
+        public static Action<int, int> AmmoResourcesUpdated;
 
         public static BaseData currentData { get; private set; }
 
@@ -22,12 +22,12 @@ namespace Buildings.Base
 
             if (baseData.AmmoResoruces != currentData.AmmoResoruces)
             {
-                AmmoResourcesUpdated?.Invoke(baseData.AmmoResoruces);
+                AmmoResourcesUpdated?.Invoke(currentData.AmmoResoruces, baseData.AmmoResoruces);
             }
 
             if (baseData.BuildingResoruces != currentData.BuildingResoruces)
             {
-                BuildingResourcesUpdated?.Invoke(baseData.BuildingResoruces);
+                BuildingResourcesUpdated?.Invoke(currentData.BuildingResoruces, baseData.BuildingResoruces);
             }
 
             currentData = baseData;

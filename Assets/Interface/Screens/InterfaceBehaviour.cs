@@ -1,7 +1,11 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using Buildings.Base;
 using Buildings.Towers;
+using DG.Tweening;
+using DG.Tweening.Core;
+using DG.Tweening.Plugins.Options;
 using Interface.Elements;
 using NaughtyAttributes;
 using Pickups;
@@ -20,17 +24,24 @@ public class InterfaceBehaviour : MonoBehaviour
     /* --- Values --- */
 
     private Label genericHintLabel;
+    private Label ammoChangeLabel;
     private StatElement playerLifes;
     private StatElement buildingResources;
     private StatElement ammoResources;
     private LinearProgressBarElement inventoryBar;
     private List<TowerCardElement> cards = new();
 
+    /* --- Values --- */
+
+    private Coroutine ammoChangeRoutine;
+
+
     private void Awake()
     {
         // References
         VisualElement root = this.document.rootVisualElement;
         this.genericHintLabel = (Label)root.Query("generic-hint-label");
+        this.ammoChangeLabel = (Label)root.Query("ammo-change-label");
         this.playerLifes = (StatElement)root.Query("player-lifes");
         this.buildingResources = (StatElement)root.Query("building-resources");
         this.ammoResources = (StatElement)root.Query("ammo-resources");
@@ -44,26 +55,44 @@ public class InterfaceBehaviour : MonoBehaviour
         ChangedGenericHint += this.SetGenericHint;
 
         // Initial values
-        this.UpdateAmmoResources(BaseSystem.currentData.AmmoResoruces);
-        this.UpdateBuildingResources(BaseSystem.currentData.BuildingResoruces);
+        this.UpdateAmmoResources(0, BaseSystem.currentData.AmmoResoruces);
+        this.UpdateBuildingResources(0, BaseSystem.currentData.BuildingResoruces);
+        this.ammoChangeLabel.SetText(string.Empty);
 
         // Tower cards
         this.SetupTowerCards();
     }
 
-    private void UpdatePlayerLifes(int value)
+    private void UpdatePlayerLifes(int old, int value)
     {
         this.playerLifes.Value = value.ToString();
     }
 
-    private void UpdateBuildingResources(int value)
+    private void UpdateBuildingResources(int old, int value)
     {
         this.buildingResources.Value = value.ToString();
     }
 
-    private void UpdateAmmoResources(int value)
+    private void UpdateAmmoResources(int old, int value)
     {
+        if (value > old)
+        {
+            if (this.ammoChangeRoutine != null)
+            {
+                this.StopCoroutine(this.ammoChangeRoutine);
+            }
+
+            this.ammoChangeRoutine = this.StartCoroutine(this.ShowAmmoChangeCorutine(value - old));
+        }
+
         this.ammoResources.Value = value.ToString();
+    }
+
+    private IEnumerator ShowAmmoChangeCorutine(int added)
+    {
+        this.ammoChangeLabel.SetText("+" + added);
+        yield return new WaitForSeconds(3f);
+        this.ammoChangeLabel.SetText(string.Empty);
     }
 
     private void UpdateInventory(int value, int max)
