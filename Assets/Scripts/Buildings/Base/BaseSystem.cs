@@ -8,6 +8,7 @@ namespace Buildings.Base
     {
         public static Action<int, int> BuildingResourcesUpdated;
         public static Action<int, int> AmmoResourcesUpdated;
+        public static Action<int, int> PlayerLifesUpdated;
 
         public static BaseData currentData { get; private set; }
 
@@ -28,6 +29,11 @@ namespace Buildings.Base
             if (baseData.BuildingResoruces != currentData.BuildingResoruces)
             {
                 BuildingResourcesUpdated?.Invoke(currentData.BuildingResoruces, baseData.BuildingResoruces);
+            }
+
+            if (baseData.PlayerLifes != currentData.PlayerLifes)
+            {
+                PlayerLifesUpdated?.Invoke(currentData.PlayerLifes, baseData.PlayerLifes);
             }
 
             currentData = baseData;

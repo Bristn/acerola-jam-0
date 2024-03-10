@@ -1,0 +1,4 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <Style src="project://database/Assets/Interface/Styles/Buttons.uss?fileID=7433441132597879392&amp;guid=4dd62531568dde7479a9123dcea1f345&amp;type=3#Buttons" />
+    <Interface.Elements.DialogElement dialog-text="test" button-text="Ok" name="dialog-element" style="position: absolute; bottom: 60px; left: auto; width: 900px; top: auto; right: auto; align-self: center;" />
+</ui:UXML>

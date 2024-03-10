@@ -1,0 +1,8 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Interface.Elements.LinearElement round-children="NONE" spacing="10" style="align-items: flex-end; width: 900px;">
+        <Interface.Elements.ContainerElement class="background-dark-900 rounded" style="padding-top: 30px; padding-right: 30px; padding-bottom: 30px; padding-left: 30px; flex-grow: 1; width: 900px;">
+            <ui:Label text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis vel condimentum nibh. Nulla gravida quam in lacus convallis varius. Aliquam convallis et neque eu malesuada." name="dialog-label" class="text-normal text-on-background" style="white-space: normal;" />
+        </Interface.Elements.ContainerElement>
+        <Interface.Elements.ButtonElement text="Continue" name="dialog-button" />
+    </Interface.Elements.LinearElement>
+</ui:UXML>

@@ -3,9 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Buildings.Base;
 using Buildings.Towers;
-using DG.Tweening;
-using DG.Tweening.Core;
-using DG.Tweening.Plugins.Options;
+using Enemies;
 using Interface.Elements;
 using NaughtyAttributes;
 using Pickups;
@@ -15,7 +13,20 @@ using UnityEngine.UIElements;
 
 public class InterfaceBehaviour : MonoBehaviour
 {
+    public static InterfaceBehaviour Instance { get; private set; }
     public static Action<string> ChangedGenericHint;
+
+    public enum Element
+    {
+        GENERIC_HINT,
+        PLAYER_LIFES,
+        BUILDING_RESOURCES,
+        AMMO_RESOURCES,
+        INENVTORY_BAR,
+        TOWER_CARDS,
+        START_WAVE,
+        TIMER,
+    }
 
     /* --- References --- */
 
@@ -25,19 +36,24 @@ public class InterfaceBehaviour : MonoBehaviour
 
     private Label genericHintLabel;
     private Label ammoChangeLabel;
+    private Label timerLabel;
+    private ButtonElement startWaveButton;
     private StatElement playerLifes;
     private StatElement buildingResources;
     private StatElement ammoResources;
     private LinearProgressBarElement inventoryBar;
+    private VisualElement cardParent;
     private List<TowerCardElement> cards = new();
 
     /* --- Values --- */
 
     private Coroutine ammoChangeRoutine;
-
+    private Dictionary<Element, VisualElement> interfaceElements = new();
 
     private void Awake()
     {
+        Instance = this;
+
         // References
         VisualElement root = this.document.rootVisualElement;
         this.genericHintLabel = (Label)root.Query("generic-hint-label");
@@ -46,13 +62,19 @@ public class InterfaceBehaviour : MonoBehaviour
         this.buildingResources = (StatElement)root.Query("building-resources");
         this.ammoResources = (StatElement)root.Query("ammo-resources");
         this.inventoryBar = (LinearProgressBarElement)root.Query("inventory-progress");
+        this.cardParent = root.Query("tower-card-parent");
+        this.startWaveButton = (ButtonElement)root.Query("start-wave-button");
+        this.timerLabel = (Label)root.Query("timer-label");
 
         // Callbacks
-        TowerPlacemementSystem.FinishedPlacement += this.ReleasedTowerCard;
+        TowerPlacemementSystem.FinishedPlacement += (succes) => this.ReleasedTowerCard();
         BaseSystem.BuildingResourcesUpdated += this.UpdateBuildingResources;
         BaseSystem.AmmoResourcesUpdated += this.UpdateAmmoResources;
+        BaseSystem.PlayerLifesUpdated += this.UpdatePlayerLifes;
         PickupSystem.PickedUpLoot += this.UpdateInventory;
         ChangedGenericHint += this.SetGenericHint;
+
+        this.startWaveButton.Click += Helpers.StartEnemySpawner;
 
         // Initial values
         this.UpdateAmmoResources(0, BaseSystem.currentData.AmmoResoruces);
@@ -61,6 +83,17 @@ public class InterfaceBehaviour : MonoBehaviour
 
         // Tower cards
         this.SetupTowerCards();
+
+        // Default visibility
+        this.interfaceElements.Add(Element.GENERIC_HINT, this.genericHintLabel);
+        this.interfaceElements.Add(Element.PLAYER_LIFES, this.playerLifes);
+        this.interfaceElements.Add(Element.BUILDING_RESOURCES, this.buildingResources);
+        this.interfaceElements.Add(Element.AMMO_RESOURCES, this.ammoResources);
+        this.interfaceElements.Add(Element.INENVTORY_BAR, this.inventoryBar.parent);
+        this.interfaceElements.Add(Element.TOWER_CARDS, this.cardParent);
+        this.interfaceElements.Add(Element.START_WAVE, this.startWaveButton);
+        this.interfaceElements.Add(Element.TIMER, this.timerLabel.parent);
+        this.HideAllElements();
     }
 
     private void UpdatePlayerLifes(int old, int value)
@@ -159,5 +192,24 @@ public class InterfaceBehaviour : MonoBehaviour
         }
 
         ChangedGenericHint.Invoke("Drag & drop to place towers");
+    }
+
+    public void HideAllElements()
+    {
+        foreach (Element type in System.Enum.GetValues(typeof(Element)))
+        {
+            if (this.interfaceElements.TryGetValue(type, out VisualElement element))
+            {
+                element.SetDisplayStyle(DisplayStyle.None);
+            }
+        }
+    }
+
+    public void SetElementVisible(Element type, bool visible)
+    {
+        if (this.interfaceElements.TryGetValue(type, out VisualElement element))
+        {
+            element.SetDisplayStyle(visible ? DisplayStyle.Flex : DisplayStyle.None);
+        }
     }
 }

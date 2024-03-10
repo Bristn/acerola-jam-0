@@ -15,8 +15,6 @@ namespace Interface.Elements
 
         /* --- Values --- */
 
-        public event Action Click;
-
         /* --- Properties --- */
 
         public override VisualElement RoundedCornersTarget => this.background;

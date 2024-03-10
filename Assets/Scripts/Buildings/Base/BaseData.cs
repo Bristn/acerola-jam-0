@@ -10,5 +10,6 @@ namespace Buildings.Base
         public int BuildingResoruces;
 
         public int AmmoResoruces;
+        public int PlayerLifes;
     }
 }

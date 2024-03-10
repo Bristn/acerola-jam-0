@@ -11,6 +11,7 @@ namespace Buildings.Base
 
         [SerializeField][BoxGroup("Settings")] private int buildingResoruce;
         [SerializeField][BoxGroup("Settings")] private int ammoResoruce;
+        [SerializeField][BoxGroup("Settings")] private int playerLifes;
 
         public class Baker : Baker<BaseAuthoring>
         {
@@ -23,6 +24,7 @@ namespace Buildings.Base
                 {
                     BuildingResoruces = authoring.buildingResoruce,
                     AmmoResoruces = authoring.ammoResoruce,
+                    PlayerLifes = authoring.playerLifes,
                 });
             }
         }

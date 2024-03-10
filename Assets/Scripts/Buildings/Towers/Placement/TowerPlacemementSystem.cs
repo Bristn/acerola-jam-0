@@ -15,7 +15,7 @@ namespace Buildings.Towers
     [UpdateInGroup(typeof(InitializationSystemGroup))]
     public partial class TowerPlacemementSystem : SystemBase
     {
-        public static Action FinishedPlacement;
+        public static Action<bool> FinishedPlacement;
         public static Action NotEnoughResources;
         public static Action PositionAlreadyOccupied;
         public static Action PositionInvalid;
@@ -39,7 +39,7 @@ namespace Buildings.Towers
             {
                 this.HideVisualiser();
                 placementData.ValueRW.ShowPlacement = false;
-                FinishedPlacement.Invoke();
+                FinishedPlacement.Invoke(false);
                 return;
             }
 
@@ -60,12 +60,12 @@ namespace Buildings.Towers
             }
 
             placementData.ValueRW.ShowPlacement = false;
-            FinishedPlacement.Invoke();
 
             // Check if cell is valid
             if (!InvalidTiles.Instance.IsCellValid(cellData.Index))
             {
                 PositionInvalid?.Invoke();
+                FinishedPlacement.Invoke(false);
                 return;
             }
 
@@ -74,6 +74,7 @@ namespace Buildings.Towers
             if (baseData.ValueRO.BuildingResoruces < information.Cost)
             {
                 NotEnoughResources?.Invoke();
+                FinishedPlacement.Invoke(false);
                 return;
             }
 
@@ -83,12 +84,14 @@ namespace Buildings.Towers
                 if (building.ValueRO.Index.Equals(cellData.Index))
                 {
                     PositionAlreadyOccupied?.Invoke();
+                    FinishedPlacement.Invoke(false);
                     return;
                 }
             }
 
             EntityCommandBuffer commandBuffer = new EntityCommandBuffer(Allocator.TempJob);
             this.PlaceTower(commandBuffer, cellData, information);
+            FinishedPlacement.Invoke(true);
 
             // Update player materials
             baseData.ValueRW.BuildingResoruces -= information.Cost;

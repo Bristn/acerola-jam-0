@@ -11,7 +11,6 @@ namespace Enemies
         public float TotalWaveCooldown;
         public float CurrentWaveCooldown;
 
-
         public bool ReduceWaveCooldown(float deltaTime)
         {
             float newTime = this.CurrentWaveCooldown + deltaTime;
