@@ -1,7 +1,6 @@
 using Common;
 using Enemies;
 using Players;
-using Unity.Collections;
 using Unity.Entities;
 using static InterfaceBehaviour;
 
@@ -41,5 +40,11 @@ public static class Helpers
         {
             entityManager.CreateSingleton<ResumeTimeData>();
         }
+    }
+
+    public static void StartTimer()
+    {
+        EntityManager entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
+        entityManager.CreateSingleton<RemainingTimeData>();
     }
 }

@@ -1,10 +1,11 @@
 - (X) Give player invincibility near base against tower projectiles to give some sort of savety
+- (X) Proper tilemap
+- (X) Adjust player speed on certain tiles (Prevent going out of bounds)
+- (X) Add timer
 - Spawn passive enemies behind the regular spawn border
 - Make enemies target player if hes to close
-- (X) Proper tilemap
 - Proper dialog texts
 - Make player drop loot when dying
-- (X) Adjust player speed on certain tiles (Prevent going out of bounds)
 - Add gameover screen
-- Add timer & win condition
+- Add win condition
 - Tower targetting

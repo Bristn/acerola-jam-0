@@ -133,6 +133,7 @@ public class DialogBehaviour : MonoBehaviour
                 InterfaceBehaviour.Instance.SetElementVisible(Element.INENVTORY_BAR, true);
                 Helpers.StartEnemySpawner();
                 Helpers.EnablePlayerMovement();
+                Helpers.StartTimer();
                 this.DialogVisible = false;
                 break;
 

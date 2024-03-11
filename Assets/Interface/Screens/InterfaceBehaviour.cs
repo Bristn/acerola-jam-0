@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Buildings.Base;
 using Buildings.Towers;
+using Common.Time;
 using Enemies;
 using Interface.Elements;
 using NaughtyAttributes;
@@ -72,6 +73,7 @@ public class InterfaceBehaviour : MonoBehaviour
         BaseSystem.AmmoResourcesUpdated += this.UpdateAmmoResources;
         BaseSystem.PlayerLifesUpdated += this.UpdatePlayerLifes;
         PickupSystem.PickedUpLoot += this.UpdateInventory;
+        RemainingTimeSystem.RemainingTimeChanged += this.UpdateTimer;
         ChangedGenericHint += this.SetGenericHint;
 
         this.startWaveButton.Click += Helpers.StartEnemySpawner;
@@ -94,6 +96,14 @@ public class InterfaceBehaviour : MonoBehaviour
         this.interfaceElements.Add(Element.START_WAVE, this.startWaveButton);
         this.interfaceElements.Add(Element.TIMER, this.timerLabel.parent);
         this.HideAllElements();
+    }
+
+    private void UpdateTimer(float remainingSec)
+    {
+        int minutes = (int)(remainingSec / 60);
+        int seconds = ((int)remainingSec) - minutes * 60;
+        int milliseconds = (int)(remainingSec % 1 * 1000);
+        this.timerLabel.SetText(minutes.ToString("00") + ":" + seconds.ToString("00") + "." + milliseconds.ToString("000"));
     }
 
     private void UpdatePlayerLifes(int old, int value)
