@@ -45,4 +45,47 @@ public class TileBaseLookup : MonoBehaviour
         return TileType.NONE;
     }
 
+    public bool IsWalkable(TileType type)
+    {
+        switch (type)
+        {
+            case TileType.NONE:
+            case TileType.WATER_A:
+            case TileType.SNOW:
+                return false;
+
+            case TileType.SAND:
+            case TileType.WATER_B:
+            case TileType.GRASS_A:
+            case TileType.GRASS_B:
+            case TileType.ROCK_A:
+            case TileType.ROCK_B:
+                return true;
+
+            default:
+                return false;
+        }
+    }
+
+    public float GetSpeedModifier(TileType type)
+    {
+        switch (type)
+        {
+            case TileType.GRASS_A:
+            case TileType.GRASS_B:
+                return 1;
+
+            case TileType.SAND:
+            case TileType.ROCK_A:
+                return 0.825f;
+
+            case TileType.WATER_B:
+            case TileType.ROCK_B:
+                return 0.75f;
+
+            default:
+                return 1;
+        }
+    }
+
 }
