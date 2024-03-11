@@ -1,8 +1,10 @@
 using System.Threading.Tasks;
 using Buildings.Towers;
+using Cameras;
 using Enemies;
 using Interface.Elements;
 using NaughtyAttributes;
+using Unity.Entities;
 using UnityEngine;
 using UnityEngine.UIElements;
 using static InterfaceBehaviour;
@@ -35,6 +37,9 @@ public class DialogBehaviour : MonoBehaviour
 
     private void Awake()
     {
+        Helpers.SpawnNewPlayer();
+        Helpers.SetGamePaused(false);
+
         // References
         VisualElement root = this.document.rootVisualElement;
         this.dialog = (DialogElement)root.Query("dialog-element");
@@ -43,6 +48,7 @@ public class DialogBehaviour : MonoBehaviour
         // Callbacks
         TowerPlacemementSystem.FinishedPlacement += this.TowerPlacementFinished;
         EnemyWaveSystem.BeatFirstWave += () => this.SetDialogHint(DialogHint.BEAT_FIRST_WAVE);
+        CameraRecenterSystem.ReachedCenter += () => this.SetDialogHint(DialogHint.PLAYER_LOST_LIFE);
 
         // Start tutorial
         Task task = new(async () =>
@@ -87,6 +93,7 @@ public class DialogBehaviour : MonoBehaviour
             case DialogHint.PLAYER_LOST_LIFE:
                 this.dialog.DialogText = "TODO: One less life, another person needs to take over ammo collection";
                 this.dialog.ButtonText = "Continue";
+                Helpers.SetGamePaused(true);
                 break;
         }
 
@@ -125,11 +132,19 @@ public class DialogBehaviour : MonoBehaviour
                 InterfaceBehaviour.Instance.SetElementVisible(Element.TIMER, true);
                 InterfaceBehaviour.Instance.SetElementVisible(Element.INENVTORY_BAR, true);
                 Helpers.StartEnemySpawner();
-                Helpers.EnablePlayerMoevemnt();
+                Helpers.EnablePlayerMovement();
                 this.DialogVisible = false;
                 break;
 
-                // TODO: Lost a life
+            case DialogHint.PLAYER_LOST_LIFE:
+                InterfaceBehaviour.Instance.SetElementVisible(Element.PLAYER_LIFES, true);
+                InterfaceBehaviour.Instance.SetElementVisible(Element.AMMO_RESOURCES, true);
+                InterfaceBehaviour.Instance.SetElementVisible(Element.TIMER, true);
+                InterfaceBehaviour.Instance.SetElementVisible(Element.INENVTORY_BAR, true);
+                this.DialogVisible = false;
+                Helpers.SetGamePaused(false);
+                Helpers.SpawnNewPlayer();
+                break;
         }
     }
 

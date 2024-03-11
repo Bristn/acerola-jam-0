@@ -1,5 +1,6 @@
 using System;
 using Buildings.Base;
+using Common;
 using Pathfinding;
 using Tilemaps;
 using Unity.Burst;
@@ -12,6 +13,7 @@ using UnityEngine.Tilemaps;
 
 namespace Enemies
 {
+    [UpdateInGroup(typeof(LateSimulationSystemGroup))]
     public partial class EnemySpawnerSystem : SystemBase
     {
         private bool isFirstWave;
@@ -24,6 +26,7 @@ namespace Enemies
             RequireForUpdate<EnemySpawnerData>();
             RequireForUpdate<EnemySpawnerEnableData>();
             RequireForUpdate<TilemapData>();
+            RequireForUpdate<ResumeTimeData>();
 
             this.random = Unity.Mathematics.Random.CreateFromIndex(0);
             this.isFirstWave = true;

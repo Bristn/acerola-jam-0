@@ -1,3 +1,4 @@
+using Common;
 using Unity.Burst;
 using Unity.Entities;
 using Unity.Mathematics;
@@ -15,6 +16,7 @@ namespace Players
             Debug.Log("PlayerMovementSystem: OnCreate");
             state.RequireForUpdate<PlayerMovementData>();
             state.RequireForUpdate<PlayerMovementEnableData>();
+            state.RequireForUpdate<ResumeTimeData>();
         }
 
         [BurstCompile]

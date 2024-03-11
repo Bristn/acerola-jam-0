@@ -99,6 +99,12 @@ public class InterfaceBehaviour : MonoBehaviour
     private void UpdatePlayerLifes(int old, int value)
     {
         this.playerLifes.Value = value.ToString();
+
+        if (value <= 0)
+        {
+            // TODO: Stop everyting & show gameover
+            Helpers.SetGamePaused(true);
+        }
     }
 
     private void UpdateBuildingResources(int old, int value)

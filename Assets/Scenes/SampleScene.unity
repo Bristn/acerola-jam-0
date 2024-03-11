@@ -325,6 +325,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   document: {fileID: 214417988}
+  playerPrefab: {fileID: 5959841755345162424, guid: 1607c33f25a64d342abc843ae25bcd53, type: 3}
+  hint: 0
 --- !u!114 &214417988
 MonoBehaviour:
   m_ObjectHideFlags: 0

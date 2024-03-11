@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using Common;
 using Pathfinding.Algorithm;
 using Pathfinding.Positions;
 using Tilemaps;
@@ -20,6 +21,7 @@ namespace Pathfinding.Followers
             Debug.Log("PathFollowerSystem: OnCreate");
             state.RequireForUpdate<PathFollowerData>();
             state.RequireForUpdate<TilemapNodesData>();
+            state.RequireForUpdate<ResumeTimeData>();
         }
 
         [BurstCompile]

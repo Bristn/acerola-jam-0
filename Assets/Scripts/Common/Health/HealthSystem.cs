@@ -1,15 +1,13 @@
+using Buildings.Base;
 using Buildings.Towers;
-using Cameras.Targets;
+using Cameras;
 using Players;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Jobs;
-using Unity.Mathematics;
 using Unity.Transforms;
 using UnityEngine;
-using UnityEngine.Tilemaps;
-using UnityEngine.UIElements;
 
 namespace Common.Health
 {
@@ -34,13 +32,35 @@ namespace Common.Health
             }.ScheduleParallel(new JobHandle());
             enemyJob.Complete();
 
-            JobHandle playerJob = new KillPlayerJob()
-            {
-                CommandBuffer = commandBuffer.AsParallelWriter(),
-            }.ScheduleParallel(enemyJob);
-            playerJob.Complete();
+            this.KillPlayer(ref state, commandBuffer);
         }
 
+        private void KillPlayer(ref SystemState state, EntityCommandBuffer commandBuffer)
+        {
+            // TODO: Give player invincibility when spawning!
+            // TODO: Drop all loot & reset inventory display properly
+            RefRW<BaseData> baseData = SystemAPI.GetSingletonRW<BaseData>();
+            foreach (var (health, _, entity) in SystemAPI.Query<RefRW<HealthData>, RefRO<PlayerMovementData>>().WithEntityAccess())
+            {
+                if (health.ValueRO.CurrentHealth > 0)
+                {
+                    return;
+                }
+
+                commandBuffer.DestroyEntity(entity);
+
+                // Adjust player lifes (Gameover detection happens in BaseSystem callbacks)
+                baseData.ValueRW.PlayerLifes--;
+
+                // Move camera to center
+                Entity recenter = commandBuffer.CreateEntity();
+                commandBuffer.AddComponent<CameraRecenterData>(recenter);
+                commandBuffer.SetComponent(recenter, new CameraRecenterData()
+                {
+                    Speed = 3f
+                });
+            }
+        }
 
         [BurstCompile]
         private partial struct KillEnemyJob : IJobEntity
@@ -69,24 +89,6 @@ namespace Common.Health
 
                 this.CommandBuffer.DestroyEntity(sortKey, entity);
                 instances.Dispose();
-            }
-        }
-
-        [BurstCompile]
-        private partial struct KillPlayerJob : IJobEntity
-        {
-            public EntityCommandBuffer.ParallelWriter CommandBuffer;
-
-            public void Execute(Entity entity, [EntityIndexInQuery] int sortKey, ref HealthData health, in PlayerMovementData player, in LocalTransform playerTransform)
-            {
-                if (health.CurrentHealth > 0)
-                {
-                    return;
-                }
-
-                // TODO: Move camera to center (gradual movement), reduce lifes & teleport player & show dialog
-
-                this.CommandBuffer.DestroyEntity(sortKey, entity);
             }
         }
     }

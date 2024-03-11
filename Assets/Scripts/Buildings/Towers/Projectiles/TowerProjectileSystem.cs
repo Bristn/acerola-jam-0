@@ -1,3 +1,4 @@
+using Common;
 using Common.Health;
 using Unity.Burst;
 using Unity.Entities;
@@ -8,6 +9,7 @@ using UnityEngine;
 namespace Buildings.Towers
 {
     [UpdateInGroup(typeof(InitializationSystemGroup))]
+
     public partial struct TowerProjectileSystem : ISystem
     {
         [BurstCompile]
@@ -15,6 +17,7 @@ namespace Buildings.Towers
         {
             Debug.Log("TowerProjectileSystem: OnCreate");
             state.RequireForUpdate<TowerProjectileData>();
+            state.RequireForUpdate<ResumeTimeData>();
         }
 
         [BurstCompile]

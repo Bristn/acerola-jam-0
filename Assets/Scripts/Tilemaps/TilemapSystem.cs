@@ -79,10 +79,12 @@ namespace Tilemaps
             {
                 this.updatePlayer = false;
 
+                /*
                 foreach (var (transform, _) in SystemAPI.Query<RefRW<LocalTransform>, RefRO<PlayerMovementData>>())
                 {
                     transform.ValueRW.Position = new(tilemapData.ValueRW.CenterOfGrid.x, tilemapData.ValueRW.CenterOfGrid.y, -5);
                 }
+                */
 
                 foreach (var (transform, _, buildingData) in SystemAPI.Query<RefRW<LocalTransform>, RefRO<BaseData>, RefRW<BuildingData>>())
                 {

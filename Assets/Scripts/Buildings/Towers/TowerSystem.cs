@@ -1,6 +1,7 @@
 using System;
 using Buildings.Base;
 using Cameras.Targets;
+using Common;
 using Common.Health;
 using Unity.Burst;
 using Unity.Collections;
@@ -11,7 +12,7 @@ using UnityEngine;
 
 namespace Buildings.Towers
 {
-    [UpdateInGroup(typeof(InitializationSystemGroup))]
+    [UpdateInGroup(typeof(LateSimulationSystemGroup))]
     public partial struct TowerSystem : ISystem
     {
         /* --- Values --- */
@@ -23,6 +24,7 @@ namespace Buildings.Towers
         {
             Debug.Log("TowerSystem: OnCreate");
             state.RequireForUpdate<TowerData>();
+            state.RequireForUpdate<ResumeTimeData>();
             this.random = Unity.Mathematics.Random.CreateFromIndex(0);
         }
 

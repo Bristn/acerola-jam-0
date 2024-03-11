@@ -14,6 +14,13 @@ namespace Cameras
         private float zoom = 5;
 
         [BurstCompile]
+        protected override void OnCreate()
+        {
+            Debug.Log("CameraRecenterSystem: OnCreate");
+            RequireForUpdate<CameraTargetData>();
+        }
+
+        [BurstCompile]
         protected override void OnUpdate()
         {
             float3 currentPosition = this.previousPosition;
