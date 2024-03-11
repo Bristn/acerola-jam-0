@@ -28,7 +28,7 @@ public class InvalidTiles : MonoBehaviour
     private void Start()
     {
         Instance = this;
-        this.SetValidAround(TilemapSystem.Center, 5);
+        this.SetValidAround(TilemapSystem.Center, 4);
     }
 
     public void ResetTiles()

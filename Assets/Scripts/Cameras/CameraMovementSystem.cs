@@ -11,7 +11,7 @@ namespace Cameras
     public partial class CameraMovementSystem : SystemBase
     {
         private float3 previousPosition = new(0, 0, -10);
-        private float zoom = 5;
+        private float zoom = 10;
 
         [BurstCompile]
         protected override void OnCreate()
@@ -37,7 +37,7 @@ namespace Cameras
 
             // Zooming is realised with the orthographic scale of the camera
             this.zoom += Input.mouseScrollDelta.y * -0.1f;
-            this.zoom = Mathf.Clamp(this.zoom, 2.5f, 7.5f);
+            this.zoom = Mathf.Clamp(this.zoom, 5f, 10f);
             GameObjectLocator.Instance.MainCamera.orthographicSize = this.zoom;
         }
     }

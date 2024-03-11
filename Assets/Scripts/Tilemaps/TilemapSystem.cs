@@ -13,7 +13,7 @@ namespace Tilemaps
 {
     public partial class TilemapSystem : SystemBase
     {
-        public static int2 Center = new(20, 20);
+        public static int2 Center = new(50, 50);
         private bool updatePlayer;
 
         protected override void OnCreate()
