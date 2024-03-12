@@ -1,7 +1,7 @@
 
 using Unity.Entities;
 
-namespace Buildings.Towers
+namespace Enemies
 {
     [System.Serializable]
     public struct EnemyData : IComponentData

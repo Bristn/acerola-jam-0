@@ -1,0 +1,10 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <Style src="project://database/Assets/Interface/Styles/Buttons.uss?fileID=7433441132597879392&amp;guid=4dd62531568dde7479a9123dcea1f345&amp;type=3#Buttons" />
+    <ui:VisualElement class="background-dark-900" style="flex-grow: 0; height: 180px; align-items: center;">
+        <ui:Label text="Game over" name="title-label" class="text-normal text-on-background" style="font-size: 50px; height: 120px; -unity-text-align: middle-left;" />
+        <ui:Label text="The enemies have overrun the base" name="reason-label" class="text-normal text-background text-on-background" style="height: 60px; -unity-text-align: middle-left;" />
+    </ui:VisualElement>
+    <ui:VisualElement name="action-background" class="background-secondary" style="flex-grow: 0; justify-content: center; align-items: center; position: absolute; bottom: 0; right: 0; left: 0; height: 60px;">
+        <ui:Label text="Press &apos;R&apos; to restart" name="restart-label" class="text-normal text-on-primary" style="height: 60px; -unity-text-align: middle-left;" />
+    </ui:VisualElement>
+</ui:UXML>

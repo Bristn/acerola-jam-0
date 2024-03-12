@@ -8,7 +8,6 @@ using Unity.Transforms;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using static TileBaseLookup;
-using static TilemapHelpers;
 
 namespace Players
 {

@@ -76,6 +76,11 @@ namespace Pathfinding.Followers
                 if (math.distance(transform.Position, targetPosition) < 0.1f)
                 {
                     follower.CurrentCellIndex--;
+                    if (follower.CurrentCellIndex == 0)
+                    {
+                        follower.OffsetFromPath = new(0, 0);
+                        return;
+                    }
 
                     float width = 0.8659766f;
                     float2 min = new(-width / 2, -width / 2);

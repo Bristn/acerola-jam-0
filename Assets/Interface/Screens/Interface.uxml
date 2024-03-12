@@ -5,7 +5,7 @@
             <Interface.Elements.StatElement name="player-lifes" value="5" style="width: 90px; height: 60px;" />
             <Interface.Elements.StatElement name="building-resources" icon="f552" value="500" style="width: 120px; height: 60px;" />
             <Interface.Elements.StatElement name="ammo-resources" icon="e19b" value="100" style="width: 120px; height: 120px;">
-                <ui:Label text="+100" name="ammo-change-label" class="text-normal text-background" style="height: 60px; -unity-text-align: upper-right; padding-right: 15px;" />
+                <ui:Label text="+100" name="ammo-change-label" class="text-normal text-on-background" style="height: 60px; -unity-text-align: upper-right; padding-right: 15px;" />
             </Interface.Elements.StatElement>
             <Interface.Elements.LinearElement spacing="15" round-children="NONE" name="inventory-parent" class="background-dark-900" style="flex-direction: row; height: 60px; align-items: center; padding-left: 15px; width: 330px; overflow: hidden;">
                 <Interface.Elements.IconElement icon="f290" color="ON_BACKGROUND" />

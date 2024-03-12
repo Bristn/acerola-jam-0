@@ -16,7 +16,7 @@ namespace Pickups
         [BurstCompile]
         protected override void OnCreate()
         {
-            this.RequireForUpdate<PickupData>();
+            this.RequireForUpdate<PickupCollectorData>();
         }
 
         [BurstCompile]
@@ -77,13 +77,11 @@ namespace Pickups
                 return;
             }
 
-            // TODO: Refactor in a way in which the ammo is colelcted once a cell radius around the abse is entered (same as build radius?)
-
             foreach (var (baseTransform, baseData, baseEntity) in SystemAPI.Query<RefRW<LocalTransform>, RefRW<BaseData>>().WithEntityAccess())
             {
                 float2 basePosition = new(baseTransform.ValueRO.Position.x, baseTransform.ValueRO.Position.y);
                 float distance = math.distance(collectorPosition, basePosition);
-                if (distance > 1.5f)
+                if (distance > 2f)
                 {
                     continue;
                 }

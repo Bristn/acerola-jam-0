@@ -2,7 +2,7 @@ using NaughtyAttributes;
 using Unity.Entities;
 using UnityEngine;
 
-namespace Buildings.Towers
+namespace Enemies
 {
     public class EnemyAuthoring : MonoBehaviour
     {

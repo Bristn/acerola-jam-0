@@ -10,6 +10,7 @@ using NaughtyAttributes;
 using Pickups;
 using Unity.Entities;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
 
 public class InterfaceBehaviour : MonoBehaviour
@@ -74,6 +75,7 @@ public class InterfaceBehaviour : MonoBehaviour
         BaseSystem.PlayerLifesUpdated += this.UpdatePlayerLifes;
         PickupSystem.PickedUpLoot += this.UpdateInventory;
         RemainingTimeSystem.RemainingTimeChanged += this.UpdateTimer;
+        EnemySystem.EnemyReachedBase += () => this.ShowGameOver(GameoverBehaviour.GameoverType.REACHED_BASE);
         ChangedGenericHint += this.SetGenericHint;
 
         this.startWaveButton.Click += Helpers.StartEnemyWaveSpawner;
@@ -98,32 +100,84 @@ public class InterfaceBehaviour : MonoBehaviour
         this.HideAllElements();
     }
 
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            TowerPlacemementSystem.FinishedPlacement -= (succes) => this.ReleasedTowerCard();
+            BaseSystem.BuildingResourcesUpdated -= this.UpdateBuildingResources;
+            BaseSystem.AmmoResourcesUpdated -= this.UpdateAmmoResources;
+            BaseSystem.PlayerLifesUpdated -= this.UpdatePlayerLifes;
+            PickupSystem.PickedUpLoot -= this.UpdateInventory;
+            RemainingTimeSystem.RemainingTimeChanged -= this.UpdateTimer;
+            EnemySystem.EnemyReachedBase -= () => this.ShowGameOver(GameoverBehaviour.GameoverType.REACHED_BASE);
+            ChangedGenericHint -= this.SetGenericHint;
+
+            var entityManager = Unity.Entities.World.DefaultGameObjectInjectionWorld.EntityManager;
+            entityManager.DestroyEntity(entityManager.UniversalQuery);
+
+            World.DefaultGameObjectInjectionWorld.Dispose();
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name, LoadSceneMode.Single);
+            DefaultWorldInitialization.Initialize("Default World", false);
+        }
+    }
+
     private void UpdateTimer(float remainingSec)
     {
+        if (this == null)
+        {
+            return;
+        }
+
         int minutes = (int)(remainingSec / 60);
         int seconds = ((int)remainingSec) - minutes * 60;
         int milliseconds = (int)(remainingSec % 1 * 1000);
         this.timerLabel.SetText(minutes.ToString("00") + ":" + seconds.ToString("00") + "." + milliseconds.ToString("000"));
+
+        if (remainingSec <= 0)
+        {
+            this.ShowGameOver(GameoverBehaviour.GameoverType.VICTORY);
+        }
     }
 
     private void UpdatePlayerLifes(int old, int value)
     {
-        this.playerLifes.Value = value.ToString();
+        if (this == null)
+        {
+            return;
+        }
 
+        this.UpdateInventory(0, 10);
+        this.playerLifes.Value = value.ToString();
         if (value <= 0)
         {
-            // TODO: Stop everyting & show gameover
-            Helpers.SetGamePaused(true);
+            this.ShowGameOver(GameoverBehaviour.GameoverType.OUT_OF_LIFES);
         }
+    }
+
+    private void ShowGameOver(GameoverBehaviour.GameoverType type)
+    {
+        this.HideAllElements();
+        GameoverBehaviour.Instance.ShowGameOver(type);
     }
 
     private void UpdateBuildingResources(int old, int value)
     {
+        if (this == null)
+        {
+            return;
+        }
+
         this.buildingResources.Value = value.ToString();
     }
 
     private void UpdateAmmoResources(int old, int value)
     {
+        if (this == null)
+        {
+            return;
+        }
+
         if (value > old)
         {
             if (this.ammoChangeRoutine != null)
@@ -146,13 +200,24 @@ public class InterfaceBehaviour : MonoBehaviour
 
     private void UpdateInventory(int value, int max)
     {
+        if (this == null)
+        {
+            return;
+        }
+
         this.inventoryBar.Max = max;
         this.inventoryBar.SetValue(value, 0.1f, DG.Tweening.Ease.InOutCubic);
 
         bool inventoryFull = value >= max;
         if (inventoryFull)
         {
+            this.SetElementVisible(Element.GENERIC_HINT, true);
             ChangedGenericHint.Invoke("Drop off ammo at base");
+        }
+        else if (value == 0)
+        {
+            this.SetElementVisible(Element.GENERIC_HINT, true);
+            ChangedGenericHint.Invoke(string.Empty);
         }
 
         this.inventoryBar.ShowText = inventoryFull;

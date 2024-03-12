@@ -3,11 +3,11 @@
 - (X) Adjust player speed on certain tiles (Prevent going out of bounds)
 - (X) Add timer
 - (X) Add proper waves
+- (X) Add gameover screen (Restarting might require to clear entities cache)
+- (X) Add win condition
 - Only spawn enemies if player is not too close
 - Spawn passive enemies behind the regular spawn border (Destroy projectiles before reaching them)
 - Make enemies target player if hes to close
 - Proper dialog texts
 - Make player drop loot when dying
-- Add gameover screen
-- Add win condition
 - Tower targetting

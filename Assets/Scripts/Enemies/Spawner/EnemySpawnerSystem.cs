@@ -57,7 +57,11 @@ namespace Enemies
             // Remove already spawned enemies
             foreach (int index in indexToRemove)
             {
-                toSpawn.RemoveAtSwapBack(index);
+                try
+                {
+                    toSpawn.RemoveAtSwapBack(index);
+                }
+                catch (System.Exception) { }
             }
 
             commandBuffer.Playback(EntityManager);

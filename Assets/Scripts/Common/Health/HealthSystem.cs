@@ -1,6 +1,7 @@
 using Buildings.Base;
 using Buildings.Towers;
 using Cameras;
+using Enemies;
 using Players;
 using Unity.Burst;
 using Unity.Collections;
@@ -37,8 +38,6 @@ namespace Common.Health
 
         private void KillPlayer(ref SystemState state, EntityCommandBuffer commandBuffer)
         {
-            // TODO: Give player invincibility when spawning!
-            // TODO: Drop all loot & reset inventory display properly
             RefRW<BaseData> baseData = SystemAPI.GetSingletonRW<BaseData>();
             foreach (var (health, _, entity) in SystemAPI.Query<RefRW<HealthData>, RefRO<PlayerMovementData>>().WithEntityAccess())
             {

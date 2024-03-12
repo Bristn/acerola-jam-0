@@ -1,4 +1,5 @@
 using System;
+using Cameras.Targets;
 using Tilemaps;
 using Unity.Burst;
 using Unity.Collections;
@@ -25,6 +26,12 @@ namespace Cameras
         {
             EntityCommandBuffer commandBuffer = new(Allocator.Temp);
 
+            // If there is a CameraTargetData, remove its entity
+            foreach (var (_, entity) in SystemAPI.Query<RefRO<CameraTargetData>>().WithEntityAccess())
+            {
+                commandBuffer.DestroyEntity(entity);
+            }
+
             TilemapData tilemapData = SystemAPI.GetSingleton<TilemapData>();
             float2 targetPosition = tilemapData.CenterOfGrid;
             float2 cameraPosition = new(GameObjectLocator.Instance.MainCamera.transform.position.x, GameObjectLocator.Instance.MainCamera.transform.position.y);
@@ -49,7 +56,10 @@ namespace Cameras
                 }
             }
 
-            GameObjectLocator.Instance.MainCamera.transform.position = new(cameraPosition.x, cameraPosition.y, GameObjectLocator.Instance.MainCamera.transform.position.z);
+            if (!float.IsNaN(cameraPosition.x) && !float.IsNaN(cameraPosition.y))
+            {
+                GameObjectLocator.Instance.MainCamera.transform.position = new(cameraPosition.x, cameraPosition.y, GameObjectLocator.Instance.MainCamera.transform.position.z);
+            }
 
             commandBuffer.Playback(EntityManager);
             commandBuffer.Dispose();

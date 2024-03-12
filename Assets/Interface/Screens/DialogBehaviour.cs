@@ -4,7 +4,6 @@ using Cameras;
 using Enemies;
 using Interface.Elements;
 using NaughtyAttributes;
-using Unity.Entities;
 using UnityEngine;
 using UnityEngine.UIElements;
 using static InterfaceBehaviour;
@@ -62,6 +61,11 @@ public class DialogBehaviour : MonoBehaviour
 
     public void SetDialogHint(DialogHint hint)
     {
+        if (GameoverBehaviour.Instance.IsShown)
+        {
+            return;
+        }
+
         this.hint = hint;
         switch (hint)
         {
@@ -106,10 +110,10 @@ public class DialogBehaviour : MonoBehaviour
         switch (this.hint)
         {
             case DialogHint.INTRO:
-
                 InterfaceBehaviour.Instance.SetElementVisible(Element.TOWER_CARDS, true);
                 InterfaceBehaviour.Instance.SetElementVisible(Element.BUILDING_RESOURCES, true);
                 InterfaceBehaviour.Instance.SetElementVisible(Element.PLAYER_LIFES, true);
+                InterfaceBehaviour.Instance.SetElementVisible(Element.GENERIC_HINT, true);
                 this.DialogVisible = false;
                 break;
 
@@ -119,6 +123,7 @@ public class DialogBehaviour : MonoBehaviour
                 InterfaceBehaviour.Instance.SetElementVisible(Element.AMMO_RESOURCES, true);
                 InterfaceBehaviour.Instance.SetElementVisible(Element.PLAYER_LIFES, true);
                 InterfaceBehaviour.Instance.SetElementVisible(Element.START_WAVE, true);
+                InterfaceBehaviour.Instance.SetElementVisible(Element.GENERIC_HINT, true);
                 this.DialogVisible = false;
                 break;
 
@@ -131,6 +136,7 @@ public class DialogBehaviour : MonoBehaviour
                 InterfaceBehaviour.Instance.SetElementVisible(Element.AMMO_RESOURCES, true);
                 InterfaceBehaviour.Instance.SetElementVisible(Element.TIMER, true);
                 InterfaceBehaviour.Instance.SetElementVisible(Element.INENVTORY_BAR, true);
+                InterfaceBehaviour.Instance.SetElementVisible(Element.GENERIC_HINT, true);
                 Helpers.StartEnemyWaveSpawner();
                 Helpers.EnablePlayerMovement();
                 Helpers.StartTimer();
@@ -142,6 +148,7 @@ public class DialogBehaviour : MonoBehaviour
                 InterfaceBehaviour.Instance.SetElementVisible(Element.AMMO_RESOURCES, true);
                 InterfaceBehaviour.Instance.SetElementVisible(Element.TIMER, true);
                 InterfaceBehaviour.Instance.SetElementVisible(Element.INENVTORY_BAR, true);
+                InterfaceBehaviour.Instance.SetElementVisible(Element.GENERIC_HINT, true);
                 this.DialogVisible = false;
                 Helpers.SetGamePaused(false);
                 Helpers.SpawnNewPlayer();
