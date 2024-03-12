@@ -6,7 +6,7 @@
 - (X) Add gameover screen (Restarting might require to clear entities cache)
 - (X) Add win condition
 - (X) Make enemies target player if hes to close
-- Only spawn enemies if player is not too close
+- (X) Only spawn enemies if player is not too close
 - Spawn passive enemies behind the regular spawn border (Destroy projectiles before reaching them)
 - Proper dialog texts
 - Make player drop loot when dying

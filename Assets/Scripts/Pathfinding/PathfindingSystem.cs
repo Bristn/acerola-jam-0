@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Pathfinding.Algorithm;
 using Pathfinding.Followers;
 using Pathfinding.Positions;
@@ -6,6 +7,7 @@ using Unity.Burst;
 using Unity.Collections;
 using Unity.Collections.LowLevel.Unsafe;
 using Unity.Entities;
+using Unity.Jobs;
 using Unity.Mathematics;
 using UnityEngine;
 
@@ -43,14 +45,21 @@ namespace Pathfinding
                 baseNodes[i] = tileBuffer[i].Node;
             }
 
-            new FindPathJob()
+            NativeArray<JobHandle> handles = new(1, Allocator.Temp);
+            JobHandle handle = new FindPathJob()
             {
                 CommandBuffer = commandBuffer.AsParallelWriter(),
                 EvenNeighborOffsets = this.evenNeighborOffsets,
                 OddNeighborOffsets = this.oddNeighborOffsets,
                 GridSize = tilemapData.GridSize,
                 AllNodes = baseNodes,
-            }.ScheduleParallel();
+            }.ScheduleParallel(new JobHandle());
+            handles[0] = handle;
+
+            JobHandle.CompleteAll(handles);
+
+            handles.Dispose();
+            baseNodes.Dispose();
         }
 
         [BurstCompile]

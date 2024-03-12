@@ -70,7 +70,7 @@ public static class Helpers
 
         entityManager.CreateSingleton(new CameraRecenterData()
         {
-            Speed = 3f
+            Speed = 4f
         });
     }
 

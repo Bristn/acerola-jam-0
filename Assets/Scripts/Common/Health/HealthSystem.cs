@@ -56,7 +56,7 @@ namespace Common.Health
                 commandBuffer.AddComponent<CameraRecenterData>(recenter);
                 commandBuffer.SetComponent(recenter, new CameraRecenterData()
                 {
-                    Speed = 3f
+                    Speed = 4f
                 });
             }
         }

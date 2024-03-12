@@ -3,6 +3,7 @@ using Buildings.Base;
 using Common;
 using Pathfinding;
 using Pathfinding.Followers;
+using Players;
 using Tilemaps;
 using Unity.Burst;
 using Unity.Collections;
@@ -76,6 +77,8 @@ namespace Enemies
             Tilemap tilemap = GameObjectLocator.Instance.Tilemap;
             float2 offsetMin = new(-Helpers.EnemySpawnRandomness, -Helpers.EnemySpawnRandomness);
             float2 offsetMax = new(Helpers.EnemySpawnRandomness, Helpers.EnemySpawnRandomness);
+            float2 playerPosition = this.GetPlayerPosition();
+
             for (int i = 0; i < 5; i++)
             {
                 // Get random spawn position
@@ -93,9 +96,12 @@ namespace Enemies
                     continue;
                 }
 
-                // Determine the path target
-                TilemapData tilemapData = SystemAPI.GetSingleton<TilemapData>();
-                int2 targetCell = tilemapData.CenterCell;
+                // Checkk if the player is too close to this spawn point (Tries to reduce instant kill potential)
+                float distanceToPlayer = math.distance(spawnPosition, playerPosition);
+                if (distanceToPlayer <= 5)
+                {
+                    continue;
+                }
 
                 // Otherwise spawn enemy at this position & make it pathfind to the base
                 Entity entity = commandBuffer.Instantiate(spawner.Prefab);
@@ -105,18 +111,21 @@ namespace Enemies
                     Scale = 0.5f
                 });
 
-                // TODO: Should be handled by the movement system
-                /*
-                commandBuffer.AddComponent<PathfindingRequestPathData>(entity);
-                commandBuffer.SetComponent(entity, new PathfindingRequestPathData()
-                {
-                    StartCell = new(cellIndex.x, cellIndex.y),
-                    EndCell = targetCell,
-                });
-                */
-
                 return;
             }
+
+            Debug.LogError("Failed to spawn enemy");
+        }
+
+
+        private float2 GetPlayerPosition()
+        {
+            foreach (var (playerTransform, _) in SystemAPI.Query<RefRO<LocalTransform>, RefRO<PlayerMovementData>>())
+            {
+                return new(playerTransform.ValueRO.Position.x, playerTransform.ValueRO.Position.y);
+            }
+
+            return new(float.MaxValue, float.MaxValue);
         }
     }
 }
