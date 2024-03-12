@@ -39,7 +39,7 @@ namespace Players
                 TileType oldTileType = TileBaseLookup.Instance.GetTileType(oldCellIndex.x, oldCellIndex.y);
                 float speedMult = TileBaseLookup.Instance.GetSpeedModifier(oldTileType);
 
-                float2 normalMovement = new float2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical")) * SystemAPI.Time.DeltaTime * 2 * speedMult;
+                float2 normalMovement = new float2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical")) * SystemAPI.Time.DeltaTime * 2.5f * speedMult;
 
                 // Determine new position
                 float2 newPosition = new(transform.ValueRW.Position.x + normalMovement.x, transform.ValueRW.Position.y + normalMovement.y);

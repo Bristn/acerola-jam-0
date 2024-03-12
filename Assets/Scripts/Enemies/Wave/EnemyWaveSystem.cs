@@ -1,15 +1,8 @@
 using System;
-using Buildings.Base;
 using Buildings.Towers;
-using Pathfinding;
-using Tilemaps;
 using Unity.Burst;
-using Unity.Collections;
 using Unity.Entities;
-using Unity.Mathematics;
-using Unity.Transforms;
 using UnityEngine;
-using UnityEngine.Tilemaps;
 
 namespace Enemies
 {
@@ -23,7 +16,7 @@ namespace Enemies
         protected override void OnCreate()
         {
             Debug.Log("EnemyWaveSystem: OnCreate");
-            RequireForUpdate<EnemySpawnerData>();
+            RequireForUpdate<EnemyWaveSpawnerData>();
 
             this.isFirstWave = true;
         }

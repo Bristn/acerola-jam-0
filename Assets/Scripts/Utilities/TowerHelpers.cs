@@ -9,7 +9,7 @@ public static class TowerHelpers
         {
             Cost = 50,
             Radius = 5f,
-            BulletVelocity = 15f,
+            BulletVelocity = 25f,
             BulletCountPerShot = 1,
             BulletRandomness = 0.1f,
             FireCooldown = 1,
@@ -19,7 +19,7 @@ public static class TowerHelpers
         {
             Cost = 50,
             Radius = 10f,
-            BulletVelocity = 30f,
+            BulletVelocity = 50f,
             BulletCountPerShot = 1,
             BulletRandomness = 0.0f,
             FireCooldown = 2,
@@ -29,7 +29,7 @@ public static class TowerHelpers
         {
             Cost = 100,
             Radius = 3f,
-            BulletVelocity = 15f,
+            BulletVelocity = 25f,
             BulletCountPerShot = 5,
             BulletRandomness = 0.5f,
             FireCooldown = 2,
@@ -39,7 +39,7 @@ public static class TowerHelpers
         {
             Cost = 100,
             Radius = 7f,
-            BulletVelocity = 20f,
+            BulletVelocity = 35f,
             BulletCountPerShot = 1,
             BulletRandomness = 0.2f,
             FireCooldown = 0.25f,

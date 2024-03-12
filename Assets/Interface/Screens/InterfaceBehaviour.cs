@@ -76,7 +76,7 @@ public class InterfaceBehaviour : MonoBehaviour
         RemainingTimeSystem.RemainingTimeChanged += this.UpdateTimer;
         ChangedGenericHint += this.SetGenericHint;
 
-        this.startWaveButton.Click += Helpers.StartEnemySpawner;
+        this.startWaveButton.Click += Helpers.StartEnemyWaveSpawner;
 
         // Initial values
         this.UpdateAmmoResources(0, BaseSystem.currentData.AmmoResoruces);

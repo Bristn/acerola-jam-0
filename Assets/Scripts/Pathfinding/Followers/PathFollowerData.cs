@@ -1,5 +1,6 @@
 
 using Unity.Entities;
+using Unity.Mathematics;
 
 namespace Pathfinding.Followers
 {
@@ -7,5 +8,6 @@ namespace Pathfinding.Followers
     public struct PathFollowerData : IComponentData
     {
         public int CurrentCellIndex;
+        public float2 OffsetFromPath;
     }
 }

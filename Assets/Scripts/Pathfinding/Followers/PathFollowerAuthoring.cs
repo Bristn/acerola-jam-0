@@ -16,7 +16,7 @@ namespace Pathfinding.Followers
 
                 this.AddComponent(entity, new PathFollowerData
                 {
-                    CurrentCellIndex = authoring.CurrentCellIndex
+                    CurrentCellIndex = authoring.CurrentCellIndex,
                 });
             }
         }

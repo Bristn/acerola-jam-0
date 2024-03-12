@@ -37,7 +37,7 @@ namespace Buildings.Towers
                     float2 targetPosition = new(targetTransform.ValueRO.Position.x, targetTransform.ValueRO.Position.y);
                     float distance = math.distance(projectilePosition, targetPosition);
 
-                    if (distance <= 0.2f)
+                    if (distance <= 0.3f)
                     {
                         health.ValueRW.CurrentHealth -= projectile.ValueRO.Damage;
                     }
@@ -45,7 +45,7 @@ namespace Buildings.Towers
 
                 // Destroy projectile once it travelled to far
                 float travelledDistance = math.distance(projectilePosition, projectile.ValueRO.Origin);
-                if (travelledDistance > 50)
+                if (travelledDistance > 20)
                 {
                     commandBuffer.DestroyEntity(entity);
                 }

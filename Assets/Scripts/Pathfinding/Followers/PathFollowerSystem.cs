@@ -15,6 +15,7 @@ namespace Pathfinding.Followers
     [UpdateInGroup(typeof(InitializationSystemGroup))]
     public partial struct PathFollowerSystem : ISystem
     {
+
         [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
@@ -37,10 +38,10 @@ namespace Pathfinding.Followers
             DynamicBuffer<TilemapNodesData> tileBuffer = SystemAPI.GetSingletonBuffer<TilemapNodesData>();
             new MoveFollowerJob()
             {
-                Speed = 1f,
+                Speed = 2f,
                 DeltaTime = Time.deltaTime,
                 TileBuffer = tileBuffer,
-                GridSize = tilemapData.GridSize
+                GridSize = tilemapData.GridSize,
             }.ScheduleParallel();
         }
 
@@ -51,24 +52,35 @@ namespace Pathfinding.Followers
             public int2 GridSize;
             public float DeltaTime;
             public float Speed;
+            public Unity.Mathematics.Random random;
 
-            public void Execute(ref LocalTransform transform, ref DynamicBuffer<PathPosition> buffer, ref PathFollowerData followerData)
+            public void Execute(Entity entity, ref LocalTransform transform, ref DynamicBuffer<PathPosition> buffer, ref PathFollowerData follower)
             {
-                if (followerData.CurrentCellIndex == -1)
+                if (follower.CurrentCellIndex == -1)
                 {
                     return;
                 }
 
-                int2 targetCell = buffer[followerData.CurrentCellIndex].GridPosition;
+                this.random = Unity.Mathematics.Random.CreateFromIndex((uint)(entity.Index + follower.CurrentCellIndex));
+
+                int2 targetCell = buffer[follower.CurrentCellIndex].GridPosition;
                 int targetIndex = PathHelpers.GetCellIndex(targetCell.x, targetCell.y, this.GridSize.x);
-                float2 targetWorldPosition = this.TileBuffer[targetIndex].WorldPosition;
+                float2 targetWorldPosition = this.TileBuffer[targetIndex].WorldPosition + follower.OffsetFromPath;
                 float3 targetPosition = new(targetWorldPosition.x, targetWorldPosition.y, -5);
                 float3 direction = math.normalizesafe(targetPosition - transform.Position);
 
+                // Move to position
                 transform.Position += direction * this.Speed * this.DeltaTime;
+
+                // If close enough, change to next target
                 if (math.distance(transform.Position, targetPosition) < 0.1f)
                 {
-                    followerData.CurrentCellIndex--;
+                    follower.CurrentCellIndex--;
+
+                    float width = 0.8659766f;
+                    float2 min = new(-width / 2, -width / 2);
+                    float2 max = new(width / 2, width / 2);
+                    follower.OffsetFromPath = this.random.NextFloat2(min, max);
                 }
             }
         }

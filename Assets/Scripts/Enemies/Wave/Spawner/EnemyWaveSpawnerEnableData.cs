@@ -4,7 +4,7 @@ using Unity.Entities;
 namespace Enemies
 {
     [System.Serializable]
-    public struct EnemySpawnerEnableData : IComponentData
+    public struct EnemyWaveSpawnerEnableData : IComponentData
     {
     }
 }

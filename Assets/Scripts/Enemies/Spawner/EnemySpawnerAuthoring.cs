@@ -20,9 +20,10 @@ namespace Enemies
                 this.AddComponent(entity, new EnemySpawnerData
                 {
                     Prefab = this.GetEntity(authoring.prefab, TransformUsageFlags.Dynamic),
-                    TotalWaveCooldown = 1,
-                    CurrentWaveCooldown = 0,
+                    MaxRandomOffset = 5,
                 });
+
+                this.AddBuffer<EnemiesToSpawnBuffer>(entity);
             }
         }
     }

@@ -2,6 +2,7 @@ using System;
 using Buildings.Base;
 using Common;
 using Pathfinding;
+using Pathfinding.Followers;
 using Tilemaps;
 using Unity.Burst;
 using Unity.Collections;
@@ -10,13 +11,13 @@ using Unity.Mathematics;
 using Unity.Transforms;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using static TileBaseLookup;
 
 namespace Enemies
 {
     [UpdateInGroup(typeof(LateSimulationSystemGroup))]
     public partial class EnemySpawnerSystem : SystemBase
     {
-        private bool isFirstWave;
         private Unity.Mathematics.Random random;
 
         [BurstCompile]
@@ -24,73 +25,79 @@ namespace Enemies
         {
             Debug.Log("EnemySpawnerSystem: OnCreate");
             RequireForUpdate<EnemySpawnerData>();
-            RequireForUpdate<EnemySpawnerEnableData>();
+            RequireForUpdate<EnemiesToSpawnBuffer>();
+
             RequireForUpdate<TilemapData>();
             RequireForUpdate<ResumeTimeData>();
-
             this.random = Unity.Mathematics.Random.CreateFromIndex(0);
-            this.isFirstWave = true;
         }
 
         [BurstCompile]
         protected override void OnUpdate()
         {
-            // Check if a new wave should be spawned
-            RefRW<EnemySpawnerData> spawnerData = SystemAPI.GetSingletonRW<EnemySpawnerData>();
-            if (!spawnerData.ValueRW.ReduceWaveCooldown(SystemAPI.Time.DeltaTime))
-            {
-                return;
-            }
-
             EntityCommandBuffer commandBuffer = new(Allocator.Temp);
-            TilemapData tilemapData = SystemAPI.GetSingleton<TilemapData>();
+            NativeList<int> indexToRemove = new(Allocator.Temp);
 
-            // Spawn first wave at a fices position & disable spawning afterwards to show a new dialog
-            if (this.isFirstWave)
+            EnemySpawnerData spawner = SystemAPI.GetSingleton<EnemySpawnerData>();
+            DynamicBuffer<EnemiesToSpawnBuffer> toSpawn = SystemAPI.GetSingletonBuffer<EnemiesToSpawnBuffer>();
+            for (int i = 0; i < toSpawn.Length; i++)
             {
-                float2 fixedWavePosition = new(tilemapData.CenterOfGrid.x + 10, tilemapData.CenterOfGrid.y);
-                this.SpawnEnemyWave(commandBuffer, spawnerData.ValueRO.Prefab, fixedWavePosition, tilemapData.CenterCell);
+                EnemiesToSpawnBuffer element = toSpawn.ElementAt(i);
+                element.Delay -= SystemAPI.Time.DeltaTime;
 
-                foreach (var (_, entity) in SystemAPI.Query<RefRW<EnemySpawnerEnableData>>().WithEntityAccess())
+                if (element.Delay <= 0)
                 {
-                    commandBuffer.DestroyEntity(entity);
+                    this.SpawnSingleEnemy(commandBuffer, spawner, element.Center);
+                    indexToRemove.Add(i);
                 }
 
-                this.isFirstWave = false;
-                commandBuffer.Playback(EntityManager);
-                commandBuffer.Dispose();
-                return;
+                toSpawn[i] = element;
             }
 
-            // Spawn a random wave
-            float angle = random.NextFloat(0, Mathf.PI * 2);
-            float radius = 10;
-
-            float2 waveCenter = new(Mathf.Cos(angle) * radius, Mathf.Sin(angle) * radius);
-            float2 enemyBasePosition = new(tilemapData.CenterOfGrid.x + waveCenter.x, tilemapData.CenterOfGrid.y + waveCenter.y);
-
-            this.SpawnEnemyWave(commandBuffer, spawnerData.ValueRO.Prefab, enemyBasePosition, tilemapData.CenterCell);
-            spawnerData.ValueRW.WaveCount++;
+            // Remove already spawned enemies
+            foreach (int index in indexToRemove)
+            {
+                toSpawn.RemoveAtSwapBack(index);
+            }
 
             commandBuffer.Playback(EntityManager);
             commandBuffer.Dispose();
+            indexToRemove.Dispose();
         }
 
-        private void SpawnEnemyWave(EntityCommandBuffer commandBuffer, Entity prefab, float2 waveCenter, int2 pathTarget)
+        // TODO: Add passive enemy spawns with more random pathfinding
+        private void SpawnSingleEnemy(EntityCommandBuffer commandBuffer, EnemySpawnerData spawner, float2 center)
         {
-            NativeArray<Entity> instances = new(1, Allocator.Temp);
-            commandBuffer.Instantiate(prefab, instances);
-
-            foreach (Entity entity in instances)
+            // Tries to spawn the enemy 5 times
+            Tilemap tilemap = GameObjectLocator.Instance.Tilemap;
+            float2 offsetMin = new(-spawner.MaxRandomOffset, -spawner.MaxRandomOffset);
+            float2 offsetMax = new(spawner.MaxRandomOffset, spawner.MaxRandomOffset);
+            for (int i = 0; i < 5; i++)
             {
-                float2 enemyOffset = this.random.NextFloat2(-1, 1);
-                float2 enemyPosition = new(waveCenter.x + enemyOffset.x, waveCenter.y + enemyOffset.y);
-                Tilemap tilemap = GameObjectLocator.Instance.Tilemap;
-                Vector3Int cellIndex = tilemap.WorldToCell(new(enemyPosition.x, enemyPosition.y, 0));
+                // Get random spawn position
+                float2 offset = this.random.NextFloat2(offsetMin, offsetMax);
+                float2 spawnPosition = center + offset;
 
+                // Is spawn position valid (is it walkable)
+                Vector3Int cellIndex = tilemap.WorldToCell(new(spawnPosition.x, spawnPosition.y, 0));
+                TileType tileType = TileBaseLookup.Instance.GetTileType(cellIndex.x, cellIndex.y);
+                bool isValid = TileBaseLookup.Instance.IsWalkable(tileType);
+
+                // If not, try another position
+                if (!isValid)
+                {
+                    continue;
+                }
+
+                // Determine the path target
+                TilemapData tilemapData = SystemAPI.GetSingleton<TilemapData>();
+                int2 targetCell = tilemapData.CenterCell;
+
+                // Otherwise spawn enemy at this position & make it pathfind to the base
+                Entity entity = commandBuffer.Instantiate(spawner.Prefab);
                 commandBuffer.SetComponent(entity, new LocalTransform()
                 {
-                    Position = new float3(enemyPosition.x, enemyPosition.y, -5),
+                    Position = new float3(spawnPosition.x, spawnPosition.y, -5),
                     Scale = 0.5f
                 });
 
@@ -98,11 +105,11 @@ namespace Enemies
                 commandBuffer.SetComponent(entity, new PathfindingRequestPathData()
                 {
                     StartCell = new(cellIndex.x, cellIndex.y),
-                    EndCell = pathTarget,
+                    EndCell = targetCell,
                 });
-            }
 
-            instances.Dispose();
+                return;
+            }
         }
     }
 }

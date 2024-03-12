@@ -7,10 +7,10 @@ using static InterfaceBehaviour;
 public static class Helpers
 {
 
-    public static void StartEnemySpawner()
+    public static void StartEnemyWaveSpawner()
     {
         EntityManager entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
-        entityManager.CreateSingleton<EnemySpawnerEnableData>();
+        entityManager.CreateSingleton<EnemyWaveSpawnerEnableData>();
         InterfaceBehaviour.Instance.SetElementVisible(Element.START_WAVE, false);
         InterfaceBehaviour.Instance.SetElementVisible(Element.TOWER_CARDS, false);
         InterfaceBehaviour.Instance.SetElementVisible(Element.BUILDING_RESOURCES, false);
