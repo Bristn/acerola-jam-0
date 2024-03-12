@@ -11,7 +11,6 @@ namespace Enemies
     [UpdateInGroup(typeof(LateSimulationSystemGroup))]
     public partial class EnemyWaveSpawnerSystem : SystemBase
     {
-        private float spawnDistance;
         private bool isFirstWave;
         private Unity.Mathematics.Random random;
 
@@ -27,7 +26,6 @@ namespace Enemies
 
             this.random = Unity.Mathematics.Random.CreateFromIndex(0);
             this.isFirstWave = true;
-            this.spawnDistance = 20;
         }
 
         [BurstCompile]
@@ -45,7 +43,7 @@ namespace Enemies
             // Spawn first wave at a fices position & disable spawning afterwards to show a new dialog
             if (this.isFirstWave)
             {
-                float2 fixedWavePosition = new(tilemapData.CenterOfGrid.x + this.spawnDistance, tilemapData.CenterOfGrid.y);
+                float2 fixedWavePosition = new(tilemapData.CenterOfGrid.x + Helpers.EnemySpawnDistance, tilemapData.CenterOfGrid.y);
                 this.SpawnEnemyWave(spawner.ValueRO, fixedWavePosition);
 
                 EntityCommandBuffer commandBuffer = new(Allocator.Temp);
@@ -62,7 +60,7 @@ namespace Enemies
 
             // Determine the wave center
             float angle = this.random.NextFloat(0, Mathf.PI * 2);
-            float2 waveOffset = new(Mathf.Cos(angle) * this.spawnDistance, Mathf.Sin(angle) * this.spawnDistance);
+            float2 waveOffset = new(Mathf.Cos(angle) * Helpers.EnemySpawnDistance, Mathf.Sin(angle) * Helpers.EnemySpawnDistance);
             float2 waveCenter = new(tilemapData.CenterOfGrid.x + waveOffset.x, tilemapData.CenterOfGrid.y + waveOffset.y);
 
             // Spawn the wave & adjust settings for next wave

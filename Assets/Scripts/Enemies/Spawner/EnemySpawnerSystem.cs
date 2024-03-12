@@ -74,8 +74,8 @@ namespace Enemies
         {
             // Tries to spawn the enemy 5 times
             Tilemap tilemap = GameObjectLocator.Instance.Tilemap;
-            float2 offsetMin = new(-spawner.MaxRandomOffset, -spawner.MaxRandomOffset);
-            float2 offsetMax = new(spawner.MaxRandomOffset, spawner.MaxRandomOffset);
+            float2 offsetMin = new(-Helpers.EnemySpawnRandomness, -Helpers.EnemySpawnRandomness);
+            float2 offsetMax = new(Helpers.EnemySpawnRandomness, Helpers.EnemySpawnRandomness);
             for (int i = 0; i < 5; i++)
             {
                 // Get random spawn position
@@ -105,12 +105,15 @@ namespace Enemies
                     Scale = 0.5f
                 });
 
+                // TODO: Should be handled by the movement system
+                /*
                 commandBuffer.AddComponent<PathfindingRequestPathData>(entity);
                 commandBuffer.SetComponent(entity, new PathfindingRequestPathData()
                 {
                     StartCell = new(cellIndex.x, cellIndex.y),
                     EndCell = targetCell,
                 });
+                */
 
                 return;
             }

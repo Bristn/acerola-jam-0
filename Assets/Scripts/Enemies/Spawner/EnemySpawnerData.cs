@@ -8,6 +8,5 @@ namespace Enemies
     public struct EnemySpawnerData : IComponentData
     {
         public Entity Prefab;
-        public float MaxRandomOffset;
     }
 }

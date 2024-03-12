@@ -8,6 +8,8 @@ using static InterfaceBehaviour;
 
 public static class Helpers
 {
+    public static float EnemySpawnRandomness = 5;
+    public static float EnemySpawnDistance = 20;
 
     public static void StartEnemyWaveSpawner()
     {
