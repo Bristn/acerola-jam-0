@@ -38,7 +38,6 @@ namespace Pathfinding.Followers
             DynamicBuffer<TilemapNodesData> tileBuffer = SystemAPI.GetSingletonBuffer<TilemapNodesData>();
             new MoveFollowerJob()
             {
-                Speed = 2f,
                 DeltaTime = Time.deltaTime,
                 TileBuffer = tileBuffer,
                 GridSize = tilemapData.GridSize,
@@ -51,7 +50,6 @@ namespace Pathfinding.Followers
             [NativeDisableParallelForRestriction] public DynamicBuffer<TilemapNodesData> TileBuffer; // Disable savety as access is readonly
             public int2 GridSize;
             public float DeltaTime;
-            public float Speed;
             public Unity.Mathematics.Random random;
 
             public void Execute(Entity entity, ref LocalTransform transform, ref DynamicBuffer<PathPosition> buffer, ref PathFollowerData follower)
@@ -70,7 +68,7 @@ namespace Pathfinding.Followers
                 float3 direction = math.normalizesafe(targetPosition - transform.Position);
 
                 // Move to position
-                transform.Position += direction * this.Speed * this.DeltaTime;
+                transform.Position += direction * (follower.UseSlowSpeed ? follower.SlowSpeed : follower.RegularSpeed) * this.DeltaTime;
 
                 // If close enough, change to next target
                 if (math.distance(transform.Position, targetPosition) < 0.1f)

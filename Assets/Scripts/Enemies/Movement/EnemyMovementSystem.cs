@@ -11,17 +11,21 @@ using Unity.Mathematics;
 using Unity.Transforms;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using static TileBaseLookup;
 
 namespace Enemies
 {
     [UpdateInGroup(typeof(LateSimulationSystemGroup))]
     public partial class EnemyMovementSystem : SystemBase
     {
+        private Unity.Mathematics.Random random;
+
         [BurstCompile]
         protected override void OnCreate()
         {
             Debug.Log("EnemyMovementSystem: OnCreate");
             RequireForUpdate<EnemyMovementData>();
+            this.random = Unity.Mathematics.Random.CreateFromIndex(0);
         }
 
         [BurstCompile]
@@ -30,7 +34,7 @@ namespace Enemies
             EntityCommandBuffer commandBuffer = new(Allocator.Temp);
 
 
-            foreach (var (enemyTransform, enemyMovement, follower, entity) in SystemAPI.Query<RefRW<LocalTransform>, RefRO<EnemyMovementData>, RefRW<PathFollowerData>>().WithEntityAccess())
+            foreach (var (enemyTransform, enemyMovement, follower, entity) in SystemAPI.Query<RefRW<LocalTransform>, RefRW<EnemyMovementData>, RefRW<PathFollowerData>>().WithEntityAccess())
             {
                 float2 enemyPosition = new(enemyTransform.ValueRO.Position.x, enemyTransform.ValueRO.Position.y);
 
@@ -41,6 +45,7 @@ namespace Enemies
                 {
                     // Hit detection is handled in the EnemySystem
                     follower.ValueRW.CurrentCellIndex = -1;
+                    follower.ValueRW.UseSlowSpeed = false;
                     this.MoveEnemyTowardsPosition(enemyPosition, playerPosition, enemyTransform);
                     continue;
                 }
@@ -51,12 +56,43 @@ namespace Enemies
                 if (distanceToBase <= enemyMovement.ValueRO.BaseDetectionRange)
                 {
                     this.SendPathfindingRequestForEnemy(commandBuffer, enemyPosition, entity, follower.ValueRO, TilemapSystem.Center);
+                    follower.ValueRW.UseSlowSpeed = false;
                     continue;
                 }
 
                 // At this point, the enemy has to be outside the base detection range
                 // Therefore move the enemy to a random neighboring cell
-                // TODO:
+                // Only send a new pathfinding request if the enemy is not moving
+                if (follower.ValueRO.CurrentCellIndex != -1)
+                {
+                    continue;
+                }
+
+                enemyMovement.ValueRW.ReducePassiveMoveDelay(SystemAPI.Time.DeltaTime);
+                if (enemyMovement.ValueRO.AllowPassiveMovement)
+                {
+                    // Determine the new target
+                    float2 minMovement = new(-enemyMovement.ValueRO.PassiveMoveRadius, -enemyMovement.ValueRO.PassiveMoveRadius);
+                    float2 maxMovement = new(enemyMovement.ValueRO.PassiveMoveRadius, enemyMovement.ValueRO.PassiveMoveRadius);
+                    float2 movement = this.random.NextFloat2(minMovement, maxMovement);
+                    float2 targetPosition = enemyPosition + movement;
+
+                    // Send a pathfinding request
+                    Tilemap tilemap = GameObjectLocator.Instance.Tilemap;
+                    Vector3Int targetCell = tilemap.WorldToCell(new(targetPosition.x, targetPosition.y, 0));
+                    TileType tileType = TileBaseLookup.Instance.GetTileType(targetCell.x, targetCell.y);
+                    if (!TileBaseLookup.Instance.IsWalkable(tileType))
+                    {
+                        continue;
+                    }
+
+                    this.SendPathfindingRequestForEnemy(commandBuffer, enemyPosition, entity, follower.ValueRO, new(targetCell.x, targetCell.y));
+
+                    // Asign a new wait time
+                    enemyMovement.ValueRW.PassiveMovementDelay = this.random.NextFloat(5);
+                    enemyMovement.ValueRW.AllowPassiveMovement = false;
+                    follower.ValueRW.UseSlowSpeed = true;
+                }
             }
 
             commandBuffer.Playback(EntityManager);

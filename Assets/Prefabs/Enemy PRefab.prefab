@@ -116,7 +116,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bdfbbebfbacf066438fd44c793cb1060, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CurrentCellIndex: -1
+  currentCellIndex: -1
+  regularSpeed: 2
+  slowSpeed: 0.5
 --- !u!114 &3591020242469247622
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -181,4 +183,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerDetectionRange: 3
-  basePriorizationRange: 2
+  passiveMovementRadius: 2

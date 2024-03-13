@@ -70,7 +70,6 @@ namespace Enemies
             indexToRemove.Dispose();
         }
 
-        // TODO: Add passive enemy spawns with more random pathfinding
         private void SpawnSingleEnemy(EntityCommandBuffer commandBuffer, EnemySpawnerData spawner, float2 center)
         {
             // Tries to spawn the enemy 5 times

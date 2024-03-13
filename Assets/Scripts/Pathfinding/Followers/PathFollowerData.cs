@@ -9,5 +9,8 @@ namespace Pathfinding.Followers
     {
         public int CurrentCellIndex;
         public float2 OffsetFromPath;
+        public float SlowSpeed;
+        public float RegularSpeed;
+        public bool UseSlowSpeed;
     }
 }

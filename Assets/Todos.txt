@@ -7,7 +7,7 @@
 - (X) Add win condition
 - (X) Make enemies target player if hes to close
 - (X) Only spawn enemies if player is not too close
-- Spawn passive enemies behind the regular spawn border (Destroy projectiles before reaching them)
+- (X) Spawn passive enemies behind the regular spawn border (Make them move randomly)
 - Proper dialog texts
 - Make player drop loot when dying
 - Tower targetting

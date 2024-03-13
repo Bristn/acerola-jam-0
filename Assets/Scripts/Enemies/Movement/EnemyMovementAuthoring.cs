@@ -9,6 +9,7 @@ namespace Enemies
         /* --- Settings --- */
 
         [SerializeField][BoxGroup("Settings")] private float playerDetectionRange;
+        [SerializeField][BoxGroup("Settings")] private float passiveMovementRadius;
 
         public class Baker : Baker<EnemyMovementAuthoring>
         {
@@ -21,6 +22,7 @@ namespace Enemies
                 {
                     PlayerDetectionRange = authoring.playerDetectionRange,
                     BaseDetectionRange = Helpers.EnemySpawnDistance + Helpers.EnemySpawnRandomness * 1.5f,
+                    PassiveMoveRadius = authoring.passiveMovementRadius,
                 });
             }
         }

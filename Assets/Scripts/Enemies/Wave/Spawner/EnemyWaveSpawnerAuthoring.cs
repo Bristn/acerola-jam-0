@@ -15,10 +15,10 @@ namespace Enemies
                 this.AddComponent(entity, new EnemyWaveSpawnerData
                 {
                     // Instantly spawn first wave
-                    TotalWaveCooldown = 5,
-                    CurrentWaveCooldown = 5,
+                    TotalWaveCooldown = 10,
+                    CurrentWaveCooldown = 10,
 
-                    EnemiesPerWave = 3,
+                    EnemiesPerWave = 7,
                     MaxEnemySpawnDelay = 2,
                 });
             }

@@ -44,14 +44,13 @@ namespace Tilemaps
                 for (int x = 0; x < bounds.size.x; x++)
                 {
                     TileType tileType = TileBaseLookup.Instance.GetTileType(x, y);
-
                     PathNode node = new()
                     {
                         X = x,
                         Y = y,
                         Index = PathHelpers.GetCellIndex(x, y, bounds.size.x),
                         GCost = int.MaxValue,
-                        IsWalkable = tileType != TileType.WATER_A,
+                        IsWalkable = TileBaseLookup.Instance.IsWalkable(tileType),
                         PreviousNodeIndex = -1
                     };
 

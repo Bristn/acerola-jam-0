@@ -1,3 +1,4 @@
+using NaughtyAttributes;
 using Unity.Entities;
 using UnityEngine;
 
@@ -5,7 +6,11 @@ namespace Pathfinding.Followers
 {
     public class PathFollowerAuthoring : MonoBehaviour
     {
-        [SerializeField] private int CurrentCellIndex;
+        /* --- Settings --- */
+
+        [SerializeField][BoxGroup("Settings")] private int currentCellIndex;
+        [SerializeField][BoxGroup("Settings")] private float regularSpeed;
+        [SerializeField][BoxGroup("Settings")] private float slowSpeed;
 
         public class Baker : Baker<PathFollowerAuthoring>
         {
@@ -16,7 +21,9 @@ namespace Pathfinding.Followers
 
                 this.AddComponent(entity, new PathFollowerData
                 {
-                    CurrentCellIndex = authoring.CurrentCellIndex,
+                    CurrentCellIndex = authoring.currentCellIndex,
+                    RegularSpeed = authoring.regularSpeed,
+                    SlowSpeed = authoring.slowSpeed,
                 });
             }
         }
