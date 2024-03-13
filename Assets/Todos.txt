@@ -9,5 +9,6 @@
 - (X) Only spawn enemies if player is not too close
 - (X) Spawn passive enemies behind the regular spawn border (Make them move randomly)
 - (X) Make player drop loot when dying
-- Proper dialog texts
+- (X) Proper dialog texts
 - Tower targetting
+- Playtest & adjust balance (Update numbers in dialog)

@@ -70,33 +70,28 @@ public class DialogBehaviour : MonoBehaviour
         switch (hint)
         {
             case DialogHint.INTRO:
-                this.dialog.DialogText = "TODO: Explain lifes & tower placement";
-                this.dialog.ButtonText = "Continue";
+                this.dialog.DialogText = "We've crashed on an alien planet. Only three of the crew members have survived. We better build some defenses against the hostile creatures."; // TODO: Set proper value
+                this.dialog.ButtonText = "Got it";
                 break;
 
             case DialogHint.PLACED_ONE_TOWER:
-                this.dialog.DialogText = "TODO: Place remaining towers (Not enough time later) Button to start waves";
-                this.dialog.ButtonText = "Continue";
-                break;
-
-            case DialogHint.START_WAVE: // Before starting the first wave
-                this.dialog.DialogText = "TODO: ";
-                this.dialog.ButtonText = "Continue";
+                this.dialog.DialogText = "We should use all of our remaining building resources now, as there will not be enough time once the enemies attack. (Luckily, the enemies are only starting their attack after clicking the start wave button at the top)";
+                this.dialog.ButtonText = "Got it";
                 break;
 
             case DialogHint.BEAT_FIRST_WAVE: // After first wave is completed
-                this.dialog.DialogText = "TODO: Ammo low, need to defend for x time";
-                this.dialog.ButtonText = "Continue";
+                this.dialog.DialogText = "The rescue team will arrive in ten minutes. We have to make due with the limited ammo supply until they arrive."; // TODO: Set proper value
+                this.dialog.ButtonText = "Got it";
                 break;
 
             case DialogHint.PLAYER_MOVEMENT:
-                this.dialog.DialogText = "TODO: Use WASD to collect & return ammo from fallen enemies";
-                this.dialog.ButtonText = "Continue";
+                this.dialog.DialogText = "Use the WASD keys to move around the map. Collect & return the ammo dropped by enemies to the base. Every drop grants three bullets."; // TODO: Set proper value
+                this.dialog.ButtonText = "Finish tutorial";
                 break;
 
             case DialogHint.PLAYER_LOST_LIFE:
-                this.dialog.DialogText = "TODO: One less life, another person needs to take over ammo collection";
-                this.dialog.ButtonText = "Continue";
+                this.dialog.DialogText = "The current ammo collector is missing in action. One of the remaining survivors has to take their place.";
+                this.dialog.ButtonText = "Got it";
                 Helpers.SetGamePaused(true);
                 break;
         }
