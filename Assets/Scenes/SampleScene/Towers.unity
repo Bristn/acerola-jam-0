@@ -262,6 +262,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 75c25009ca005a54480049125c222077, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  targetPrefab: {fileID: 6208684964791120742, guid: 1123c8dc76250194087b3ce3422571f9, type: 3}
   towerPrefab: {fileID: 1089696477478625884, guid: 412e5fb5b0d3fc9409b1f2198511c154, type: 3}
   projectilePrefab: {fileID: 1089696477478625884, guid: 5d099ddbc5c1ea548a876a18e40e072b, type: 3}
 --- !u!114 &1910539523

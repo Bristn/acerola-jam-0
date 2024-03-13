@@ -10,5 +10,5 @@
 - (X) Spawn passive enemies behind the regular spawn border (Make them move randomly)
 - (X) Make player drop loot when dying
 - (X) Proper dialog texts
-- Tower targetting
+- (-) Tower targetting
 - Playtest & adjust balance (Update numbers in dialog)

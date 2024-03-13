@@ -1,6 +1,4 @@
-using System;
 using Buildings.Base;
-using Cameras.Targets;
 using Common;
 using Common.Health;
 using Unity.Burst;
@@ -45,37 +43,83 @@ namespace Buildings.Towers
                     tower.ValueRW.ReduceFireCooldown(Time.deltaTime);
                 }
 
+                // Update target visualiser
+                float2 towerPosition = new(towerTransform.ValueRO.Position.x, towerTransform.ValueRO.Position.y);
+                TargetData targetData = this.GetNearestEnemyEntity(ref state, towerPosition);
+                if (!targetData.HasTarget || targetData.Distance > tower.ValueRO.Radius)
+                {
+                    this.UpdateTowerTargetVisualiser(ref state, tower.ValueRO.Index, new(0, 0, 100));
+                    continue;
+                }
+
+                this.UpdateTowerTargetVisualiser(ref state, tower.ValueRO.Index, new(targetData.Position.x, targetData.Position.y, -6));
+
                 canFire = tower.ValueRO.CanFire && baseData.ValueRO.AmmoResoruces > 0;
                 if (!canFire)
                 {
                     continue;
                 }
 
-                // Get the nearest enemy in range
-                float2 towerPosition = new(towerTransform.ValueRO.Position.x, towerTransform.ValueRO.Position.y);
-                float nearestDistance = float.MaxValue;
-                float2 nearestPosition = new(float.MaxValue, float.MaxValue);
-                foreach (var (enemyTransform, towerTarget, health, enemyEntity) in SystemAPI.Query<RefRO<LocalTransform>, RefRO<TowerTargetData>, RefRO<HealthData>>().WithEntityAccess())
-                {
-                    float2 enemyPosition = new(enemyTransform.ValueRO.Position.x, enemyTransform.ValueRO.Position.y);
-                    float distance = math.distance(towerPosition, enemyPosition);
-                    if (distance < nearestDistance)
-                    {
-                        nearestDistance = distance;
-                        nearestPosition = enemyPosition;
-                    }
-                }
+                // Spawn the projectile entity
+                this.SpawnProjectiles(commandBuffer, tower.ValueRO, towerSpawner.ProjectilePrefab, targetData.Position, towerPosition);
+                tower.ValueRW.CanFire = false;
+                baseData.ValueRW.AmmoResoruces -= 1;
+            }
+        }
 
-                // Validate that there is a target
-                if (nearestPosition.x == float.MaxValue || nearestDistance > tower.ValueRO.Radius)
+        private struct TargetData
+        {
+            public Entity Entity;
+            public float Distance;
+            public float2 Position;
+            public bool HasTarget;
+        }
+
+        private TargetData GetNearestEnemyEntity(ref SystemState state, float2 towerPosition)
+        {
+            float nearestDistance = float.MaxValue;
+            Entity nearestEntity = default;
+            float2 nearestPosition = new(float.MaxValue, float.MaxValue);
+            foreach (var (enemyTransform, towerTarget, health, enemyEntity) in SystemAPI.Query<RefRO<LocalTransform>, RefRO<TowerTargetData>, RefRO<HealthData>>().WithEntityAccess())
+            {
+                float2 enemyPosition = new(enemyTransform.ValueRO.Position.x, enemyTransform.ValueRO.Position.y);
+                float distance = math.distance(towerPosition, enemyPosition);
+                if (distance < nearestDistance)
+                {
+                    nearestDistance = distance;
+                    nearestEntity = enemyEntity;
+                    nearestPosition = enemyPosition;
+                }
+            }
+
+            if (nearestDistance == float.MaxValue)
+            {
+                return new()
+                {
+                    HasTarget = false,
+                };
+            }
+
+            return new()
+            {
+                Entity = nearestEntity,
+                Distance = nearestDistance,
+                HasTarget = true,
+                Position = nearestPosition,
+            };
+        }
+
+        private void UpdateTowerTargetVisualiser(ref SystemState state, int towerIndex, float3 targetPosition)
+        {
+            foreach (var visualiser in SystemAPI.Query<RefRW<TowerTargetVisualiserData>>())
+            {
+                if (visualiser.ValueRO.TowerIndex != towerIndex)
                 {
                     continue;
                 }
 
-                // Spawn the projectile entity
-                this.SpawnProjectiles(commandBuffer, tower.ValueRO, towerSpawner.ProjectilePrefab, nearestPosition, towerPosition);
-                tower.ValueRW.CanFire = false;
-                baseData.ValueRW.AmmoResoruces -= 1;
+                visualiser.ValueRW.Position = targetPosition;
+                return;
             }
         }
 

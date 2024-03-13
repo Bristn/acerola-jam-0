@@ -131,14 +131,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Base
       objectReference: {fileID: 0}
-    - target: {fileID: 4683250025943892335, guid: a73a5894eb6512c4f86e691cdf4cb3d3, type: 3}
-      propertyPath: playerLifes
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 4683250025943892335, guid: a73a5894eb6512c4f86e691cdf4cb3d3, type: 3}
-      propertyPath: ammoResoruce
-      value: 50
-      objectReference: {fileID: 0}
     - target: {fileID: 5564963567107213884, guid: a73a5894eb6512c4f86e691cdf4cb3d3, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

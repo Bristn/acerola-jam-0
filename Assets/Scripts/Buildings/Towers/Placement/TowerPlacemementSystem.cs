@@ -16,9 +16,8 @@ namespace Buildings.Towers
     public partial class TowerPlacemementSystem : SystemBase
     {
         public static Action<bool> FinishedPlacement;
-        public static Action NotEnoughResources;
-        public static Action PositionAlreadyOccupied;
-        public static Action PositionInvalid;
+
+        private int towerCount;
 
         protected override void OnCreate()
         {
@@ -64,7 +63,6 @@ namespace Buildings.Towers
             // Check if cell is valid
             if (!InvalidTiles.Instance.IsCellValid(cellData.Index))
             {
-                PositionInvalid?.Invoke();
                 FinishedPlacement.Invoke(false);
                 return;
             }
@@ -73,7 +71,6 @@ namespace Buildings.Towers
             RefRW<BaseData> baseData = SystemAPI.GetSingletonRW<BaseData>();
             if (baseData.ValueRO.BuildingResoruces < information.Cost)
             {
-                NotEnoughResources?.Invoke();
                 FinishedPlacement.Invoke(false);
                 return;
             }
@@ -83,7 +80,6 @@ namespace Buildings.Towers
             {
                 if (building.ValueRO.Index.Equals(cellData.Index))
                 {
-                    PositionAlreadyOccupied?.Invoke();
                     FinishedPlacement.Invoke(false);
                     return;
                 }
@@ -110,42 +106,57 @@ namespace Buildings.Towers
         private void PlaceTower(EntityCommandBuffer commandBuffer, CellData cellData, TowerInformation towerInformation)
         {
             // Place tower
-            Entity prefab = SystemAPI.GetSingleton<TowerSpawnerData>().TowerPrefab;
-            Entity instance = commandBuffer.Instantiate(prefab);
+            Entity towerPrefab = SystemAPI.GetSingleton<TowerSpawnerData>().TowerPrefab;
+            Entity towerInstance = commandBuffer.Instantiate(towerPrefab);
 
             // Add Components to new instance
-            commandBuffer.AddComponent<BuildingData>(instance);
-            commandBuffer.SetComponent(instance, new BuildingData()
+            commandBuffer.AddComponent<BuildingData>(towerInstance);
+            commandBuffer.SetComponent(towerInstance, new BuildingData()
             {
                 Index = cellData.Index
             });
 
             // Set tower values
-            commandBuffer.SetComponent(instance, new TowerData()
+            commandBuffer.SetComponent(towerInstance, new TowerData()
             {
+                Index = this.towerCount,
                 Radius = towerInformation.Radius,
                 BulletVelocity = towerInformation.BulletVelocity,
                 BulletCountPerShot = towerInformation.BulletCountPerShot,
                 BulletRandomness = towerInformation.BulletRandomness,
 
-                // Newly placed towers don't have to reload...
+                // Newly placed towers don't have to reload
                 TotalFireCooldown = towerInformation.FireCooldown,
                 CurrentFireCooldown = 0,
                 CanFire = false,
-
-                // ... but they need to target their enemies first
-                TotalTargettingTime = towerInformation.TargettingTime,
-                CurrentTargettingTime = towerInformation.TargettingTime,
-                HasTarget = false,
             });
 
             // Position prefab
-            commandBuffer.SetComponent(instance, new LocalTransform()
+            commandBuffer.SetComponent(towerInstance, new LocalTransform()
             {
                 Position = cellData.Center,
                 Scale = 0.5f,
                 Rotation = new(0, 0, 0, 1)
             });
+
+            // Create visualiser
+            Entity visualiserPrefab = SystemAPI.GetSingleton<TowerSpawnerData>().VisualiserPrefab;
+            Entity visualiserInstance = commandBuffer.Instantiate(visualiserPrefab);
+
+            commandBuffer.AddComponent<TowerTargetVisualiserData>(visualiserInstance);
+            commandBuffer.SetComponent(visualiserInstance, new TowerTargetVisualiserData()
+            {
+                TowerIndex = this.towerCount,
+            });
+
+            commandBuffer.SetComponent(visualiserInstance, new LocalTransform()
+            {
+                Position = new(cellData.Center.x, cellData.Center.y, 100),
+                Scale = 25f,
+                Rotation = new(0, 0, 0, 1),
+            });
+
+            this.towerCount++;
         }
     }
 }

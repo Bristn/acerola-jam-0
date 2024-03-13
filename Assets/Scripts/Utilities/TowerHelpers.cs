@@ -13,7 +13,6 @@ public static class TowerHelpers
             BulletCountPerShot = 1,
             BulletRandomness = 0.1f,
             FireCooldown = 1,
-            TargettingTime = 2,
         },
         new() // Sniper Tower
         {
@@ -23,7 +22,6 @@ public static class TowerHelpers
             BulletCountPerShot = 1,
             BulletRandomness = 0.0f,
             FireCooldown = 2,
-            TargettingTime = 2,
         },
         new() // Shotgun Tower 
         {
@@ -33,7 +31,6 @@ public static class TowerHelpers
             BulletCountPerShot = 5,
             BulletRandomness = 0.5f,
             FireCooldown = 2,
-            TargettingTime = 2,
         },
         new() // Rifle Tower
         {
@@ -43,7 +40,6 @@ public static class TowerHelpers
             BulletCountPerShot = 1,
             BulletRandomness = 0.2f,
             FireCooldown = 0.25f,
-            TargettingTime = 2,
         },
     };
 

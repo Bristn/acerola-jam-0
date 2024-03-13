@@ -6,6 +6,7 @@ namespace Buildings.Towers
     [System.Serializable]
     public struct TowerData : IComponentData
     {
+        public int Index;
         public float Radius;
         public float BulletVelocity;
         public int BulletCountPerShot;
@@ -20,11 +21,6 @@ namespace Buildings.Towers
         public float CurrentFireCooldown;
         public bool CanFire;
 
-        public float TotalTargettingTime;
-        public float CurrentTargettingTime;
-        public bool HasTarget;
-
-
         public void ReduceFireCooldown(float deltaTime)
         {
             float newTime = this.CurrentFireCooldown - deltaTime;
@@ -36,19 +32,6 @@ namespace Buildings.Towers
             }
 
             this.CurrentFireCooldown = newTime;
-        }
-
-        public void ReduceTargettingTime(float deltaTime)
-        {
-            float newTime = this.CurrentTargettingTime - deltaTime;
-            if (newTime <= 0)
-            {
-                this.CurrentTargettingTime = this.TotalTargettingTime;
-                this.HasTarget = true;
-                return;
-            }
-
-            this.CurrentTargettingTime = newTime;
         }
     }
 }
