@@ -8,6 +8,6 @@
 - (X) Make enemies target player if hes to close
 - (X) Only spawn enemies if player is not too close
 - (X) Spawn passive enemies behind the regular spawn border (Make them move randomly)
+- (X) Make player drop loot when dying
 - Proper dialog texts
-- Make player drop loot when dying
 - Tower targetting

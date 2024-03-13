@@ -8,6 +8,7 @@ namespace Pickups
     {
         /* --- Settings --- */
 
+        [SerializeField][BoxGroup("Settings")] private GameObject pickupPrefab;
         [SerializeField][BoxGroup("Settings")] private float pickupRadius;
         [SerializeField][BoxGroup("Settings")] private int maxLoot;
 
