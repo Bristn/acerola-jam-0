@@ -70,7 +70,7 @@ public class DialogBehaviour : MonoBehaviour
         switch (hint)
         {
             case DialogHint.INTRO:
-                this.dialog.DialogText = "We've crashed on an alien planet. Only three of the crew members have survived. We better build some defenses against the hostile creatures."; // TODO: Set proper value
+                this.dialog.DialogText = "We've crashed on an alien planet. Only three of the crew members have survived. We better build some defenses against the hostile creatures.";
                 this.dialog.ButtonText = "Got it";
                 break;
 
@@ -80,12 +80,12 @@ public class DialogBehaviour : MonoBehaviour
                 break;
 
             case DialogHint.BEAT_FIRST_WAVE: // After first wave is completed
-                this.dialog.DialogText = "The rescue team will arrive in ten minutes. We have to make due with the limited ammo supply until they arrive."; // TODO: Set proper value
+                this.dialog.DialogText = "The rescue team will arrive in seven minutes. We have to make due with the limited ammo supply until they arrive.";
                 this.dialog.ButtonText = "Got it";
                 break;
 
             case DialogHint.PLAYER_MOVEMENT:
-                this.dialog.DialogText = "Use the WASD keys to move around the map. Collect & return the ammo dropped by enemies to the base. Every drop grants three bullets."; // TODO: Set proper value
+                this.dialog.DialogText = "Use the WASD keys to move around the map. Collect & return the ammo dropped by enemies to the base.";
                 this.dialog.ButtonText = "Finish tutorial";
                 break;
 

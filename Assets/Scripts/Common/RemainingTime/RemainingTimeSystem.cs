@@ -15,7 +15,7 @@ namespace Common.Time
         protected override void OnCreate()
         {
             Debug.Log("RemainingTimeSystem: OnCreate");
-            RemainingTime = 10 * 60;
+            RemainingTime = 7 * 60;
             RequireForUpdate<RemainingTimeData>();
             RequireForUpdate<ResumeTimeData>();
         }

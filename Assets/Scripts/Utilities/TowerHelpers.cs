@@ -7,7 +7,7 @@ public static class TowerHelpers
     public static TowerInformation[] Towers = new TowerInformation[] {
         new() // Default Tower
         {
-            Cost = 50,
+            Cost = 25,
             Radius = 5f,
             BulletVelocity = 25f,
             BulletCountPerShot = 1,
@@ -25,7 +25,7 @@ public static class TowerHelpers
         },
         new() // Shotgun Tower 
         {
-            Cost = 100,
+            Cost = 75,
             Radius = 3f,
             BulletVelocity = 25f,
             BulletCountPerShot = 5,
@@ -36,9 +36,9 @@ public static class TowerHelpers
         {
             Cost = 100,
             Radius = 7f,
-            BulletVelocity = 35f,
+            BulletVelocity = 25f,
             BulletCountPerShot = 1,
-            BulletRandomness = 0.2f,
+            BulletRandomness = 0.25f,
             FireCooldown = 0.25f,
         },
     };

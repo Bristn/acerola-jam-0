@@ -87,7 +87,7 @@ namespace Pickups
                 }
 
                 // Check if pickup can be dropped
-                baseData.ValueRW.AmmoResoruces += collector.ValueRW.StoredPickups * 2;
+                baseData.ValueRW.AmmoResoruces += collector.ValueRW.StoredPickups * 1;
                 collector.ValueRW.StoredPickups = 0;
                 PickedUpLoot?.Invoke(collector.ValueRO.StoredPickups, collector.ValueRO.MaxPickups);
                 continue;

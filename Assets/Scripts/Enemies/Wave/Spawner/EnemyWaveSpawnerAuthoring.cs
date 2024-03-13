@@ -18,7 +18,7 @@ namespace Enemies
                     TotalWaveCooldown = 10,
                     CurrentWaveCooldown = 10,
 
-                    EnemiesPerWave = 7,
+                    EnemiesPerWave = 10,
                     MaxEnemySpawnDelay = 2,
                 });
             }

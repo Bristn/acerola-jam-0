@@ -63,7 +63,8 @@ namespace Buildings.Towers
                 // Spawn the projectile entity
                 this.SpawnProjectiles(commandBuffer, tower.ValueRO, towerSpawner.ProjectilePrefab, targetData.Position, towerPosition);
                 tower.ValueRW.CanFire = false;
-                baseData.ValueRW.AmmoResoruces -= 1;
+                baseData.ValueRW.AmmoResoruces -= tower.ValueRO.BulletCountPerShot;
+                baseData.ValueRW.AmmoResoruces = math.max(0, baseData.ValueRW.AmmoResoruces);
             }
         }
 

@@ -100,7 +100,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   buildingResoruce: 750
-  ammoResoruce: 50
+  ammoResoruce: 100
   playerLifes: 3
 --- !u!114 &399033912302761206
 MonoBehaviour:
