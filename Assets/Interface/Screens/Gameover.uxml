@@ -5,6 +5,6 @@
         <ui:Label text="The enemies have overrun the base" name="reason-label" class="text-normal text-background text-on-background" style="height: 60px; -unity-text-align: middle-left;" />
     </ui:VisualElement>
     <ui:VisualElement name="action-background" class="background-secondary" style="flex-grow: 0; justify-content: center; align-items: center; position: absolute; bottom: 0; right: 0; left: 0; height: 60px;">
-        <ui:Label text="Press &apos;R&apos; to restart" name="restart-label" class="text-normal text-on-primary" style="height: 60px; -unity-text-align: middle-left;" />
+        <ui:Label text="Press &apos;R&apos; to restart   |   Press &apos;Q&apos; to quit" name="restart-label" class="text-normal text-on-primary" style="height: 60px; -unity-text-align: middle-left;" />
     </ui:VisualElement>
 </ui:UXML>

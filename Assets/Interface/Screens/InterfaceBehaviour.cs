@@ -102,6 +102,11 @@ public class InterfaceBehaviour : MonoBehaviour
 
     private void Update()
     {
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            Application.Quit();
+        }
+
         if (Input.GetKeyDown(KeyCode.R))
         {
             TowerPlacemementSystem.FinishedPlacement -= (succes) => this.ReleasedTowerCard();

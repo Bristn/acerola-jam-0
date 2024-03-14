@@ -26,8 +26,8 @@ public static class TowerHelpers
         new() // Shotgun Tower 
         {
             Cost = 75,
-            Radius = 3f,
-            BulletVelocity = 25f,
+            Radius = 3.5f,
+            BulletVelocity = 15f,
             BulletCountPerShot = 5,
             BulletRandomness = 0.5f,
             FireCooldown = 2,

@@ -14,10 +14,10 @@
         </Interface.Elements.LinearElement>
     </ui:VisualElement>
     <Interface.Elements.LinearElement name="tower-card-parent" spacing="30" style="position: absolute; bottom: 0; left: 0; right: 0; flex-direction: row; justify-content: center; align-items: flex-end; height: 210px;">
-        <Interface.Elements.TowerCardElement name="tower-default" tower-name="Default" tower-cost="25" tower-description="- Medium range &lt;br&gt;- Medium firerate &lt;br&gt;- Medium targetting &lt;br&gt;- Medium velocity &lt;br&gt; " twoer-type="0" tower-type="0" class="tower-card tower-card-0" />
-        <Interface.Elements.TowerCardElement name="tower-sniper" tower-name="Sniper" tower-description="- Long range &lt;br&gt;- Slow firerate &lt;br&gt;- Slow targetting &lt;br&gt;- Fast velocity &lt;br&gt; " tower-cost="50" twoer-type="1" tower-type="1" class="tower-card tower-card-1" />
-        <Interface.Elements.TowerCardElement name="tower-shotgun" tower-name="Shotgun" tower-description="- Short range &lt;br&gt;- Medium firerate &lt;br&gt;- Fast targetting &lt;br&gt;- Slow velocity &lt;br&gt; " twoer-type="2" tower-type="2" tower-cost="75" class="tower-card tower-card-2" />
-        <Interface.Elements.TowerCardElement name="tower-rifle" tower-name="Rifle" tower-description="- Medium range &lt;br&gt;- Fast firerate &lt;br&gt;- Medium targetting &lt;br&gt;- Medium velocity &lt;br&gt;" twoer-type="3" tower-type="3" class="tower-card tower-card-3" />
+        <Interface.Elements.TowerCardElement name="tower-default" tower-name="Default" tower-cost="25" tower-description="- Medium range &lt;br&gt;- Medium firerate &lt;br&gt;- Medium velocity &lt;br&gt; " twoer-type="0" tower-type="0" class="tower-card tower-card-0" />
+        <Interface.Elements.TowerCardElement name="tower-sniper" tower-name="Sniper" tower-description="- Long range &lt;br&gt;- Slow firerate &lt;br&gt;- Fast velocity &lt;br&gt; " tower-cost="50" twoer-type="1" tower-type="1" class="tower-card tower-card-1" />
+        <Interface.Elements.TowerCardElement name="tower-shotgun" tower-name="Shotgun" tower-description="- Short range &lt;br&gt;- Medium firerate &lt;br&gt;- Slow velocity &lt;br&gt; " twoer-type="2" tower-type="2" tower-cost="75" class="tower-card tower-card-2" />
+        <Interface.Elements.TowerCardElement name="tower-rifle" tower-name="Rifle" tower-description="- Medium range &lt;br&gt;- Fast firerate &lt;br&gt;- Medium velocity &lt;br&gt;" twoer-type="3" tower-type="3" class="tower-card tower-card-3" />
     </Interface.Elements.LinearElement>
     <ui:VisualElement style="flex-grow: 1; position: absolute; left: 0; right: 0; bottom: 220px; align-items: center;">
         <ui:Label text="Drag &amp; Drop to place tower" name="generic-hint-label" class="text-normal text-background" />

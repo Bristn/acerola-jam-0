@@ -1,11 +1,11 @@
 Default
-- Medium range <br>- Medium firerate <br>- Medium targetting <br>- Medium velocity <br>
+- Medium range <br>- Medium firerate <br>- Medium velocity <br>
 
 Sniper
-- Long range <br>- Slow firerate <br>- Slow targetting <br>- Fast velocity <br>
+- Long range <br>- Slow firerate <br>- Fast velocity <br>
 
 Shotgun
-- Short range <br>- Medium firerate <br>- Fast targetting <br>- Slow velocity <br>
+- Short range <br>- Medium firerate <br>- Slow velocity <br>
 
 Rifle
-- Medium range <br>- Fast firerate <br>- Medium targetting <br>- Medium velocity <br>
+- Medium range <br>- Fast firerate <br>- Medium velocity <br>
